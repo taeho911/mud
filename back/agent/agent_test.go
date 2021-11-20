@@ -2,8 +2,6 @@ package agent
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"testing"
 	"time"
 
@@ -11,25 +9,21 @@ import (
 )
 
 func TestCreateClient(t *testing.T) {
-	username := os.Getenv("DB_USERNAME")
-	password := os.Getenv("DB_PASSWORD")
-	connUri := fmt.Sprintf("mongodb://%s:%s@localhost:27017/?authSource=admin", username, password)
+	connUri := makeDatabaseURI()
 	CreateClient(connUri)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	// if err := client.Connect(ctx); err != nil {
-	// 	t.Fatalf("client.Connect(ctx) failed with %s. err = %v", connUri, err)
-	// }
-	// defer client.Disconnect(ctx)
+	if err := client.Connect(ctx); err != nil {
+		t.Fatalf("client.Connect(ctx) failed with %s. err = %v", connUri, err)
+	}
+	defer client.Disconnect(ctx)
 	if err := client.Ping(ctx, readpref.Primary()); err != nil {
 		t.Fatalf("client.Ping(ctx, readpref.Primary()) failed with %s. err = %v", connUri, err)
 	}
 }
 
 func TestGetColl(t *testing.T) {
-	username := os.Getenv("DB_USERNAME")
-	password := os.Getenv("DB_PASSWORD")
-	connUri := fmt.Sprintf("mongodb://%s:%s@localhost:27017/?authSource=admin", username, password)
+	connUri := makeDatabaseURI()
 	CreateClient(connUri)
 	coll, dbctx, dbcancel := GetColl(context.Background(), "test")
 	if coll == nil {
