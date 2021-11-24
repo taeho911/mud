@@ -7,6 +7,8 @@ import (
 	"os"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -40,10 +42,11 @@ func makeDatabaseURI() string {
 
 func CreateClient() {
 	connUri := makeDatabaseURI()
-	opts := options.Client().ApplyURI(makeDatabaseURI())
-	opts.SetMinPoolSize(minpool)
-	opts.SetMaxPoolSize(maxpool)
-	opts.SetMaxConnIdleTime(connidle)
+	options := options.Client().ApplyURI(makeDatabaseURI())
+	options.SetMinPoolSize(minpool)
+	options.SetMaxPoolSize(maxpool)
+	options.SetMaxConnIdleTime(connidle)
+	// mongodb의 커넥션이 증가 혹은 감소할 때 실행중인 세션의 수를 출력한다.
 	// opts.SetPoolMonitor(&event.PoolMonitor{
 	// 	Event: func(evt *event.PoolEvent) {
 	// 		switch evt.Type {
@@ -55,25 +58,11 @@ func CreateClient() {
 	// 	},
 	// })
 	var err error
-	client, err = mongo.NewClient(opts)
+	client, err = mongo.NewClient(options)
 	if err != nil {
 		log.Panicln("Failed to create client. URI =", connUri)
 	}
-	// ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	// defer cancel()
-	// if err := client.Connect(ctx); err != nil {
-	// 	log.Panicln("Failed to connect to database. URI =", connUri)
-	// }
-	// defer client.Disconnect(ctx)
-	// if err := client.Ping(ctx, readpref.Primary()); err != nil {
-	// 	log.Panicf("Failed to ping database. URI = %s, err = %v", connUri, err)
-	// }
 }
-
-// func disconnClient(dbctx context.Context, cancel context.CancelFunc) {
-// 	client.Disconnect(dbctx)
-// 	cancel()
-// }
 
 func getColl(collname string) *mongo.Collection {
 	return client.Database(dbname).Collection(collname)
@@ -94,7 +83,21 @@ func insertOne(collname string, entity interface{}, ctx context.Context) (*mongo
 	return result, nil
 }
 
-func findAll(collname string, entity interface{}, ctx context.Context, filter interface{}, option *options.FindOptions) error {
+func findOne(collname string, entity interface{}, ctx context.Context, filter interface{}, option *options.FindOneOptions) error {
+	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	if err := client.Connect(dbctx); err != nil {
+		return err
+	}
+	defer client.Disconnect(dbctx)
+
+	if err := getColl(collname).FindOne(dbctx, filter, option).Decode(entity); err != nil {
+		return err
+	}
+	return nil
+}
+
+func find(collname string, entity interface{}, ctx context.Context, filter interface{}, option *options.FindOptions) error {
 	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	if err := client.Connect(dbctx); err != nil {
@@ -111,4 +114,49 @@ func findAll(collname string, entity interface{}, ctx context.Context, filter in
 		return err
 	}
 	return nil
+}
+
+func updateByID(collname string, id primitive.ObjectID, update interface{}, ctx context.Context, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
+	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	if err := client.Connect(dbctx); err != nil {
+		return nil, err
+	}
+	defer client.Disconnect(dbctx)
+
+	result, err := getColl(collname).UpdateByID(ctx, id, bson.M{"$set": update}, option)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func updateOne(collname string, update interface{}, ctx context.Context, filter interface{}, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
+	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	if err := client.Connect(dbctx); err != nil {
+		return nil, err
+	}
+	defer client.Disconnect(dbctx)
+
+	result, err := getColl(collname).UpdateOne(ctx, filter, update, option)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func deleteOne(collname string, id primitive.ObjectID, ctx context.Context, filter interface{}, option *options.DeleteOptions) (*mongo.DeleteResult, error) {
+	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	if err := client.Connect(dbctx); err != nil {
+		return nil, err
+	}
+	defer client.Disconnect(dbctx)
+
+	result, err := getColl(collname).DeleteOne(ctx, filter, option)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
