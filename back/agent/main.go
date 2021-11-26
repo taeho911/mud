@@ -3,7 +3,6 @@ package agent
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -17,9 +16,10 @@ var client *mongo.Client
 
 const (
 	dbname   string        = "mud"
-	minpool  uint64        = 5
-	maxpool  uint64        = 20
+	minpool  uint64        = 3
+	maxpool  uint64        = 7
 	connidle time.Duration = 10
+	timeout  time.Duration = 3
 )
 
 func makeDatabaseURI() string {
@@ -40,14 +40,13 @@ func makeDatabaseURI() string {
 	}
 }
 
-func CreateClient() {
-	connUri := makeDatabaseURI()
+func CreateClient(ctx context.Context) error {
 	options := options.Client().ApplyURI(makeDatabaseURI())
 	options.SetMinPoolSize(minpool)
 	options.SetMaxPoolSize(maxpool)
 	options.SetMaxConnIdleTime(connidle)
 	// mongodb의 커넥션이 증가 혹은 감소할 때 실행중인 세션의 수를 출력한다.
-	// opts.SetPoolMonitor(&event.PoolMonitor{
+	// options.SetPoolMonitor(&event.PoolMonitor{
 	// 	Event: func(evt *event.PoolEvent) {
 	// 		switch evt.Type {
 	// 		case event.GetSucceeded:
@@ -60,8 +59,16 @@ func CreateClient() {
 	var err error
 	client, err = mongo.NewClient(options)
 	if err != nil {
-		log.Panicln("Failed to create client. URI =", connUri)
+		return err
 	}
+	if err := client.Connect(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteClient(ctx context.Context) {
+	client.Disconnect(ctx)
 }
 
 func getColl(collname string) *mongo.Collection {
@@ -69,12 +76,8 @@ func getColl(collname string) *mongo.Collection {
 }
 
 func insertOne(collname string, entity interface{}, ctx context.Context) (*mongo.InsertOneResult, error) {
-	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	dbctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
-	if err := client.Connect(dbctx); err != nil {
-		return nil, err
-	}
-	defer client.Disconnect(dbctx)
 
 	result, err := getColl(collname).InsertOne(dbctx, entity)
 	if err != nil {
@@ -84,26 +87,24 @@ func insertOne(collname string, entity interface{}, ctx context.Context) (*mongo
 }
 
 func findOne(collname string, entity interface{}, ctx context.Context, filter interface{}, option *options.FindOneOptions) error {
-	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
-	if err := client.Connect(dbctx); err != nil {
-		return err
-	}
-	defer client.Disconnect(dbctx)
 
-	if err := getColl(collname).FindOne(dbctx, filter, option).Decode(entity); err != nil {
+	var err error
+	if option == nil {
+		err = getColl(collname).FindOne(dbctx, filter).Decode(entity)
+	} else {
+		err = getColl(collname).FindOne(dbctx, filter, option).Decode(entity)
+	}
+	if err != nil {
 		return err
 	}
 	return nil
 }
 
 func find(collname string, entity interface{}, ctx context.Context, filter interface{}, option *options.FindOptions) error {
-	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
-	if err := client.Connect(dbctx); err != nil {
-		return err
-	}
-	defer client.Disconnect(dbctx)
 
 	curosr, err := getColl(collname).Find(dbctx, filter, option)
 	if err != nil {
@@ -117,14 +118,10 @@ func find(collname string, entity interface{}, ctx context.Context, filter inter
 }
 
 func updateByID(collname string, id primitive.ObjectID, update interface{}, ctx context.Context, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
-	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
-	if err := client.Connect(dbctx); err != nil {
-		return nil, err
-	}
-	defer client.Disconnect(dbctx)
 
-	result, err := getColl(collname).UpdateByID(ctx, id, bson.M{"$set": update}, option)
+	result, err := getColl(collname).UpdateByID(dbctx, id, bson.M{"$set": update}, option)
 	if err != nil {
 		return nil, err
 	}
@@ -132,14 +129,10 @@ func updateByID(collname string, id primitive.ObjectID, update interface{}, ctx 
 }
 
 func updateOne(collname string, update interface{}, ctx context.Context, filter interface{}, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
-	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
-	if err := client.Connect(dbctx); err != nil {
-		return nil, err
-	}
-	defer client.Disconnect(dbctx)
 
-	result, err := getColl(collname).UpdateOne(ctx, filter, update, option)
+	result, err := getColl(collname).UpdateOne(dbctx, filter, bson.M{"$set": update}, option)
 	if err != nil {
 		return nil, err
 	}
@@ -147,14 +140,10 @@ func updateOne(collname string, update interface{}, ctx context.Context, filter 
 }
 
 func deleteOne(collname string, id primitive.ObjectID, ctx context.Context, filter interface{}, option *options.DeleteOptions) (*mongo.DeleteResult, error) {
-	dbctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
-	if err := client.Connect(dbctx); err != nil {
-		return nil, err
-	}
-	defer client.Disconnect(dbctx)
 
-	result, err := getColl(collname).DeleteOne(ctx, filter, option)
+	result, err := getColl(collname).DeleteOne(dbctx, filter, option)
 	if err != nil {
 		return nil, err
 	}

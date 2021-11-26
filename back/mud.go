@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"io"
 	"net/http"
@@ -16,6 +17,9 @@ func main() {
 	}
 	http.HandleFunc("/hello", helloHandler)
 
-	agent.CreateClient()
+	ctx := context.Background()
+	agent.CreateClient(ctx)
+	defer agent.DeleteClient(ctx)
+
 	http.ListenAndServe(":"+*port, nil)
 }
