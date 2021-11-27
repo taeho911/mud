@@ -75,11 +75,22 @@ func getColl(collname string) *mongo.Collection {
 	return client.Database(dbname).Collection(collname)
 }
 
-func insertOne(collname string, entity interface{}, ctx context.Context) (*mongo.InsertOneResult, error) {
+func insertOne(collname string, entity interface{}, ctx context.Context, option *options.InsertOneOptions) (*mongo.InsertOneResult, error) {
 	dbctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	result, err := getColl(collname).InsertOne(dbctx, entity)
+	result, err := getColl(collname).InsertOne(dbctx, entity, option)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func insertMany(collname string, entities []interface{}, ctx context.Context, option *options.InsertManyOptions) (*mongo.InsertManyResult, error) {
+	dbctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	result, err := getColl(collname).InsertMany(dbctx, entities, option)
 	if err != nil {
 		return nil, err
 	}
@@ -139,11 +150,22 @@ func updateOne(collname string, update interface{}, ctx context.Context, filter 
 	return result, nil
 }
 
-func deleteOne(collname string, id primitive.ObjectID, ctx context.Context, filter interface{}, option *options.DeleteOptions) (*mongo.DeleteResult, error) {
+func deleteOne(collname string, ctx context.Context, filter interface{}, option *options.DeleteOptions) (*mongo.DeleteResult, error) {
 	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
 
 	result, err := getColl(collname).DeleteOne(dbctx, filter, option)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func deleteMany(collname string, ctx context.Context, filter interface{}, option *options.DeleteOptions) (*mongo.DeleteResult, error) {
+	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
+	defer cancel()
+
+	result, err := getColl(collname).DeleteMany(dbctx, filter, option)
 	if err != nil {
 		return nil, err
 	}

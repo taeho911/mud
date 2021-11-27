@@ -1,10 +1,9 @@
 import logo from './media/logo.svg';
 import './styles/app.css';
-// import { Link } from 'react-router-dom';
 
 function App() {
   return (
-    <div>
+    <div className='container'>
       <header>
         <img src={logo} className="app-logo" alt="logo" />
         <h1>M U D</h1>

@@ -2,40 +2,45 @@ package agent
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"taeho/mud/model"
 	"testing"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-const (
-	testcollname string = "test"
-)
-
-var (
-	testID     primitive.ObjectID
-	testEntity model.Acc
-)
-
-func TestMakeDatabaseURI(t *testing.T) {
-	uri := makeDatabaseURI()
-	t.Log("uri =", uri)
-}
-
-func TestCreateClient(t *testing.T) {
+func TestMain(m *testing.M) {
 	ctx := context.TODO()
 	if err := CreateClient(ctx); err != nil {
-		t.Fatalf("CreateClient(ctx) failed with %s. err = %v", makeDatabaseURI(), err)
+		fmt.Printf("err: %v\n", err)
+		os.Exit(-1)
 	}
-	if err := client.Ping(ctx, readpref.Primary()); err != nil {
-		t.Fatalf("client.Ping(ctx, readpref.Primary()) failed with %s. err = %v", makeDatabaseURI(), err)
-	}
+	defer DeleteClient(ctx)
+	returnCode := m.Run()
+	os.Exit(returnCode)
 }
 
+// func TestMakeDatabaseURI(t *testing.T) {
+// 	uri := makeDatabaseURI()
+// 	t.Log("uri =", uri)
+// }
+
+// func TestCreateClient(t *testing.T) {
+// 	ctx := context.TODO()
+// 	if err := CreateClient(ctx); err != nil {
+// 		t.Fatalf("CreateClient(ctx) failed with %s. err = %v", makeDatabaseURI(), err)
+// 	}
+// 	if err := client.Ping(ctx, readpref.Primary()); err != nil {
+// 		t.Fatalf("client.Ping(ctx, readpref.Primary()) failed with %s. err = %v", makeDatabaseURI(), err)
+// 	}
+// }
+
 func TestInsertOne(t *testing.T) {
+	collname := "test"
+	ctx := context.TODO()
 	entity := model.Acc{
 		Owner:    "testuser",
 		Index:    0,
@@ -44,92 +49,154 @@ func TestInsertOne(t *testing.T) {
 		Password: "testpass",
 	}
 
-	result, err := insertOne(testcollname, entity, context.TODO())
+	result, err := insertOne(collname, entity, ctx, nil)
 	if err != nil {
 		t.Fatalf("insertOne failed. err = %v", err)
 	}
 	if result.InsertedID == nil {
 		t.Fatalf("insertOne failed. InsertedID = %v", result.InsertedID)
 	}
-	testID = result.InsertedID.(primitive.ObjectID)
-	testEntity = entity
+
+	deleteOne(collname, ctx, bson.M{"_id": result.InsertedID}, nil)
+}
+
+func TestInsertMany(t *testing.T) {
+	collname := "test"
+	ctx := context.TODO()
+	insertEntity := []interface{}{
+		model.Acc{
+			Title:    "TestInsertMany",
+			Username: "TestInsertMany_1",
+		},
+		model.Acc{
+			Title:    "TestInsertMany",
+			Username: "TestInsertMany_2",
+		},
+	}
+
+	result, err := insertMany(collname, insertEntity, ctx, nil)
+	if err != nil {
+		t.Fatalf("InsertMany failed. err = %v", err)
+	}
+	if sizeOfResult := len(result.InsertedIDs); sizeOfResult != 2 {
+		t.Fatalf("InsertMany failed. sizeOfResult = %v", sizeOfResult)
+	}
+
+	for item := range result.InsertedIDs {
+		deleteOne(collname, ctx, bson.M{"_id": item}, nil)
+	}
 }
 
 func TestFindOne(t *testing.T) {
-	entity := model.Acc{}
-	filter := bson.M{"_id": testID}
+	collname := "test"
+	ctx := context.TODO()
+	insertEntity := model.Acc{
+		Title: "TestFindOne",
+	}
+	result, _ := insertOne(collname, insertEntity, ctx, nil)
 
-	t.Log("entity =", entity)
+	var entity model.Acc
+	filter := bson.M{"_id": result.InsertedID}
 
-	if err := findOne(testcollname, &entity, context.TODO(), filter, nil); err != nil {
+	if err := findOne(collname, &entity, ctx, filter, nil); err != nil {
 		t.Fatalf("findOne failed. err = %v", err)
 	}
-	if entity.Owner != testEntity.Owner {
-		t.Fatalf("entity.Owner is wrong. Owner = %v", entity.Owner)
-	}
-	if entity.Title != testEntity.Title {
+	if entity.Title != insertEntity.Title {
 		t.Fatalf("entity.Title is wrong. Title = %v", entity.Title)
 	}
+
+	deleteOne(collname, ctx, bson.M{"_id": result.InsertedID}, nil)
 }
 
 func TestFind(t *testing.T) {
+	collname := "test"
+	ctx := context.TODO()
+	insertEntity := []interface{}{
+		model.Acc{
+			Title:    "TestFind",
+			Username: "TestFind_1",
+		},
+		model.Acc{
+			Title:    "TestFind",
+			Username: "TestFind_2",
+		},
+	}
+	result, _ := insertMany(collname, insertEntity, ctx, nil)
+
 	entity := []model.Acc{}
-	filter := bson.M{"deleted": false}
+	filter := bson.M{"title": "TestFind"}
 	option := options.Find().SetSort(bson.D{primitive.E{Key: "index", Value: 1}})
 
-	if err := find(testcollname, &entity, context.TODO(), filter, option); err != nil {
+	if err := find(collname, &entity, ctx, filter, option); err != nil {
 		t.Fatalf("find failed. err = %v", err)
 	}
-	if sizeOfEntity := len(entity); sizeOfEntity == 0 {
+	if sizeOfEntity := len(entity); sizeOfEntity < 2 {
 		t.Fatalf("Entity size is %v", sizeOfEntity)
+	}
+
+	for item := range result.InsertedIDs {
+		deleteOne(collname, ctx, bson.M{"_id": item}, nil)
 	}
 }
 
 func TestUpdateByID(t *testing.T) {
+	collname := "test"
 	ctx := context.TODO()
+	insertEntity := model.Acc{
+		Username: "TestUpdateByID",
+		Email:    "TestUpdateByID@haha.com",
+		Alias:    []string{"1", "2"},
+	}
+	result, _ := insertOne(collname, insertEntity, ctx, nil)
+
 	update := model.Acc{
 		Username: "updatebyid",
 		Password: "haha",
 		Email:    "UpdateByID@gmail.com",
 	}
 
-	if result, err := updateByID(testcollname, testID, update, ctx, nil); err != nil {
+	if result, err := updateByID(collname, result.InsertedID.(primitive.ObjectID), update, ctx, nil); err != nil {
 		t.Fatalf("updateByID failed. err = %v", err)
 	} else if result.ModifiedCount == 0 {
 		t.Fatalf("updateByID failed. ModifiedCount = %v", result.ModifiedCount)
 	}
 
-	entity := model.Acc{}
-	filter := bson.M{"_id": testID}
-
-	if err := findOne(testcollname, &entity, ctx, filter, nil); err != nil {
-		t.Fatalf("find failed. err = %v", err)
-	}
+	deleteOne(collname, ctx, bson.M{"_id": result.InsertedID}, nil)
 }
 
 func TestUpdateOne(t *testing.T) {
+	collname := "test"
 	ctx := context.TODO()
+	insertEntity := model.Acc{
+		Username: "TestUpdateOne",
+		Email:    "TestUpdateOne@hoho.com",
+		Memo:     "ipsum rorem",
+	}
+	result, _ := insertOne(collname, insertEntity, ctx, nil)
+
 	update := model.Acc{
 		Title:    "Hello world",
 		Username: "UpdateOne",
 		Password: "---",
 		Email:    "UpdateOne@naver.com",
 	}
-	filter := bson.M{"_id": testID}
+	filter := bson.M{"_id": result.InsertedID}
 
-	if result, err := updateOne(testcollname, update, ctx, filter, nil); err != nil {
+	if result, err := updateOne(collname, update, ctx, filter, nil); err != nil {
 		t.Fatalf("updateOne failed. err = %v", err)
 	} else if result.ModifiedCount == 0 {
 		t.Fatalf("updateOne failed. ModifiedCount = %v", result.ModifiedCount)
 	}
+
+	deleteOne(collname, ctx, bson.M{"_id": result.InsertedID}, nil)
 }
 
-func TestDeleteOne(t *testing.T) {
-	filter := bson.M{"_id": testID}
+// func TestDeleteOne(t *testing.T) {
+// 	filter := bson.M{"_id": testID}
 
-	if result, err := deleteOne(testcollname, testID, context.TODO(), filter, nil); err != nil {
-		t.Fatalf("deleteOne failed. err = %v", err)
-	} else if result.DeletedCount == 0 {
-		t.Fatalf("deleteOne failed. DeletedCount = %v", result.DeletedCount)
-	}
-}
+// 	if result, err := deleteOne(testcollname, context.TODO(), filter, nil); err != nil {
+// 		t.Fatalf("deleteOne failed. err = %v", err)
+// 	} else if result.DeletedCount == 0 {
+// 		t.Fatalf("deleteOne failed. DeletedCount = %v", result.DeletedCount)
+// 	}
+// }

@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import App from './App';
-import Sign from './routes/Sign';
-import Account from './routes/Account';
+import Sign from './components/Sign';
+import Account from './components/Account';
 import './styles/global.css'
 import './styles/index.css';
 

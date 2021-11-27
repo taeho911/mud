@@ -32,6 +32,10 @@
   color: white;
 }
 
+.container {
+  margin-bottom: 20vh;
+}
+
 .link {
   color: #61dafb;
 }
