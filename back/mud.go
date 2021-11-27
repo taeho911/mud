@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	port := flag.String("p", "80", "Port")
+	port := flag.String("p", "8080", "Port")
 	flag.Parse()
 
 	helloHandler := func(w http.ResponseWriter, req *http.Request) {
