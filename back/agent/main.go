@@ -86,11 +86,11 @@ func insertOne(collname string, entity interface{}, ctx context.Context, option 
 	return result, nil
 }
 
-func insertMany(collname string, entities []interface{}, ctx context.Context, option *options.InsertManyOptions) (*mongo.InsertManyResult, error) {
+func insertMany(collname string, entity []interface{}, ctx context.Context, option *options.InsertManyOptions) (*mongo.InsertManyResult, error) {
 	dbctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	result, err := getColl(collname).InsertMany(dbctx, entities, option)
+	result, err := getColl(collname).InsertMany(dbctx, entity, option)
 	if err != nil {
 		return nil, err
 	}
