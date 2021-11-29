@@ -76,8 +76,12 @@ func getColl(collname string) *mongo.Collection {
 	return client.Database(dbname).Collection(collname)
 }
 
-func CreateIndexes() {
-
+func createIndexes(collname string, indexModels []mongo.IndexModel) ([]string, error) {
+	name, err := getColl(collname).Indexes().CreateMany(context.TODO(), indexModels, nil)
+	if err != nil {
+		return nil, err
+	}
+	return name, nil
 }
 
 func insertOne(collname string, entity model.Model, ctx context.Context, option *options.InsertOneOptions) (*mongo.InsertOneResult, error) {

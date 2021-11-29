@@ -13,7 +13,16 @@ const (
 	accountCollname string = "acc"
 )
 
-func AccInsertOne(ctx context.Context, entity model.Account) (model.Account, error) {
+func AccountCreateIndexes() ([]string, error) {
+	var account model.Account
+	name, err := createIndexes(accountCollname, account.IndexFields())
+	if err != nil {
+		return nil, err
+	}
+	return name, err
+}
+
+func AccountInsertOne(ctx context.Context, entity model.Account) (model.Account, error) {
 	result, err := insertOne(accountCollname, &entity, ctx, nil)
 	if err != nil {
 		return entity, err
@@ -22,7 +31,7 @@ func AccInsertOne(ctx context.Context, entity model.Account) (model.Account, err
 	return entity, nil
 }
 
-func AccFindAll(ctx context.Context) ([]model.Account, error) {
+func AccountFindAll(ctx context.Context) ([]model.Account, error) {
 	filter := bson.M{"deleted": false}
 	// mongodb의 소트에는 1(asc), -1(desc)이 존재한다.
 	option := options.Find().SetSort(bson.D{primitive.E{Key: "index", Value: 1}})

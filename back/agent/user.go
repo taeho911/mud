@@ -12,6 +12,15 @@ const (
 	userCollname string = "user"
 )
 
+func UserCreateIndexes() ([]string, error) {
+	var user model.User
+	name, err := createIndexes(userCollname, user.IndexFields())
+	if err != nil {
+		return nil, err
+	}
+	return name, err
+}
+
 func UserFindByUsername(ctx context.Context, username string) (*model.User, error) {
 	filter := bson.M{"username": username}
 	var entity model.User

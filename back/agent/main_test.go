@@ -38,6 +38,15 @@ func TestMain(m *testing.M) {
 // 	}
 // }
 
+func TestCreateIndexes(t *testing.T) {
+	var account model.Account
+	name, err := createIndexes("test", account.IndexFields())
+	if err != nil {
+		t.Fatalf("createIndexes failed. err = %v", err)
+	}
+	fmt.Println("name =", name)
+}
+
 func TestInsertOne(t *testing.T) {
 	collname := "test"
 	ctx := context.TODO()
