@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"taeho/mud/model"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -75,7 +76,11 @@ func getColl(collname string) *mongo.Collection {
 	return client.Database(dbname).Collection(collname)
 }
 
-func insertOne(collname string, entity interface{}, ctx context.Context, option *options.InsertOneOptions) (*mongo.InsertOneResult, error) {
+func CreateIndexes() {
+
+}
+
+func insertOne(collname string, entity model.Model, ctx context.Context, option *options.InsertOneOptions) (*mongo.InsertOneResult, error) {
 	dbctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
@@ -86,11 +91,11 @@ func insertOne(collname string, entity interface{}, ctx context.Context, option 
 	return result, nil
 }
 
-func insertMany(collname string, entity []interface{}, ctx context.Context, option *options.InsertManyOptions) (*mongo.InsertManyResult, error) {
+func insertMany(collname string, entity []model.Model, ctx context.Context, option *options.InsertManyOptions) (*mongo.InsertManyResult, error) {
 	dbctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	result, err := getColl(collname).InsertMany(dbctx, entity, option)
+	result, err := getColl(collname).InsertMany(dbctx, model.ConvertModelToInterface(entity), option)
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +133,7 @@ func find(collname string, entity interface{}, ctx context.Context, filter inter
 	return nil
 }
 
-func updateByID(collname string, id primitive.ObjectID, update interface{}, ctx context.Context, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
+func updateByID(collname string, id primitive.ObjectID, update model.Model, ctx context.Context, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
 	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
 
@@ -139,7 +144,7 @@ func updateByID(collname string, id primitive.ObjectID, update interface{}, ctx 
 	return result, nil
 }
 
-func updateOne(collname string, update interface{}, ctx context.Context, filter interface{}, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
+func updateOne(collname string, update model.Model, ctx context.Context, filter interface{}, option *options.UpdateOptions) (*mongo.UpdateResult, error) {
 	dbctx, cancel := context.WithTimeout(ctx, timeout*time.Second)
 	defer cancel()
 

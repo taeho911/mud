@@ -12,7 +12,7 @@ func TestUserInsertOne(t *testing.T) {
 		Username: "TestUserInsertOne",
 		Password: "TestUserInsertOne",
 	}
-	result, err := UserInsertOne(ctx, entity)
+	result, err := UserInsertOne(ctx, &entity)
 	if err != nil {
 		t.Fatalf("TestUserInsertOne Fail. err = %v", err)
 	}
@@ -32,13 +32,13 @@ func TestUserFindByUsername(t *testing.T) {
 		Username: "TestUserFindByUsername",
 		Password: "TestUserFindByUsername",
 	}
-	result, _ := UserInsertOne(ctx, entity)
+	result, _ := UserInsertOne(ctx, &entity)
 	findResult, err := UserFindByUsername(ctx, result.Username)
 	if err != nil {
 		t.Fatalf("TestUserFindByUsername Fail. err = %v", err)
 	}
 	if findResult.ID != result.ID {
-		t.Fatalf("findResult.ID != result.ID. findResult.ID = %v", findResult.ID)
+		t.Fatalf("findResult.ID != result.ID. findResult.ID = %v, result.ID = %v", findResult.ID, result.ID)
 	}
 	if findResult.Username != result.Username {
 		t.Fatalf("findResult.Username != result.Username. findResult.Username = %v", findResult.Username)

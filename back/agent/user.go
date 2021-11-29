@@ -12,16 +12,16 @@ const (
 	userCollname string = "user"
 )
 
-func UserFindByUsername(ctx context.Context, username string) (model.User, error) {
+func UserFindByUsername(ctx context.Context, username string) (*model.User, error) {
 	filter := bson.M{"username": username}
 	var entity model.User
-	if err := findOne(userCollname, entity, ctx, filter, nil); err != nil {
-		return entity, err
+	if err := findOne(userCollname, &entity, ctx, filter, nil); err != nil {
+		return &entity, err
 	}
-	return entity, nil
+	return &entity, nil
 }
 
-func UserInsertOne(ctx context.Context, entity model.User) (model.User, error) {
+func UserInsertOne(ctx context.Context, entity *model.User) (*model.User, error) {
 	result, err := insertOne(userCollname, entity, ctx, nil)
 	if err != nil {
 		return entity, err

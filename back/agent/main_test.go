@@ -41,15 +41,14 @@ func TestMain(m *testing.M) {
 func TestInsertOne(t *testing.T) {
 	collname := "test"
 	ctx := context.TODO()
-	entity := model.Acc{
+	entity := model.Account{
 		Owner:    "testuser",
-		Index:    0,
 		Title:    "testtitle",
 		Username: "testuser",
 		Password: "testpass",
 	}
 
-	result, err := insertOne(collname, entity, ctx, nil)
+	result, err := insertOne(collname, &entity, ctx, nil)
 	if err != nil {
 		t.Fatalf("insertOne failed. err = %v", err)
 	}
@@ -63,12 +62,12 @@ func TestInsertOne(t *testing.T) {
 func TestInsertMany(t *testing.T) {
 	collname := "test"
 	ctx := context.TODO()
-	insertEntity := []interface{}{
-		model.Acc{
+	insertEntity := []model.Model{
+		&model.Account{
 			Title:    "TestInsertMany",
 			Username: "TestInsertMany_1",
 		},
-		model.Acc{
+		&model.Account{
 			Title:    "TestInsertMany",
 			Username: "TestInsertMany_2",
 		},
@@ -90,12 +89,12 @@ func TestInsertMany(t *testing.T) {
 func TestFindOne(t *testing.T) {
 	collname := "test"
 	ctx := context.TODO()
-	insertEntity := model.Acc{
+	insertEntity := model.Account{
 		Title: "TestFindOne",
 	}
-	result, _ := insertOne(collname, insertEntity, ctx, nil)
+	result, _ := insertOne(collname, &insertEntity, ctx, nil)
 
-	var entity model.Acc
+	var entity model.Account
 	filter := bson.M{"_id": result.InsertedID}
 
 	if err := findOne(collname, &entity, ctx, filter, nil); err != nil {
@@ -111,19 +110,19 @@ func TestFindOne(t *testing.T) {
 func TestFind(t *testing.T) {
 	collname := "test"
 	ctx := context.TODO()
-	insertEntity := []interface{}{
-		model.Acc{
+	insertEntity := []model.Model{
+		&model.Account{
 			Title:    "TestFind",
 			Username: "TestFind_1",
 		},
-		model.Acc{
+		&model.Account{
 			Title:    "TestFind",
 			Username: "TestFind_2",
 		},
 	}
 	result, _ := insertMany(collname, insertEntity, ctx, nil)
 
-	entity := []model.Acc{}
+	entity := []model.Account{}
 	filter := bson.M{"title": "TestFind"}
 	option := options.Find().SetSort(bson.D{primitive.E{Key: "index", Value: 1}})
 
@@ -142,20 +141,20 @@ func TestFind(t *testing.T) {
 func TestUpdateByID(t *testing.T) {
 	collname := "test"
 	ctx := context.TODO()
-	insertEntity := model.Acc{
+	insertEntity := model.Account{
 		Username: "TestUpdateByID",
 		Email:    "TestUpdateByID@haha.com",
 		Alias:    []string{"1", "2"},
 	}
-	result, _ := insertOne(collname, insertEntity, ctx, nil)
+	result, _ := insertOne(collname, &insertEntity, ctx, nil)
 
-	update := model.Acc{
+	update := model.Account{
 		Username: "updatebyid",
 		Password: "haha",
 		Email:    "UpdateByID@gmail.com",
 	}
 
-	if result, err := updateByID(collname, result.InsertedID.(primitive.ObjectID), update, ctx, nil); err != nil {
+	if result, err := updateByID(collname, result.InsertedID.(primitive.ObjectID), &update, ctx, nil); err != nil {
 		t.Fatalf("updateByID failed. err = %v", err)
 	} else if result.ModifiedCount == 0 {
 		t.Fatalf("updateByID failed. ModifiedCount = %v", result.ModifiedCount)
@@ -167,14 +166,14 @@ func TestUpdateByID(t *testing.T) {
 func TestUpdateOne(t *testing.T) {
 	collname := "test"
 	ctx := context.TODO()
-	insertEntity := model.Acc{
+	insertEntity := model.Account{
 		Username: "TestUpdateOne",
 		Email:    "TestUpdateOne@hoho.com",
 		Memo:     "ipsum rorem",
 	}
-	result, _ := insertOne(collname, insertEntity, ctx, nil)
+	result, _ := insertOne(collname, &insertEntity, ctx, nil)
 
-	update := model.Acc{
+	update := model.Account{
 		Title:    "Hello world",
 		Username: "UpdateOne",
 		Password: "---",
@@ -182,7 +181,7 @@ func TestUpdateOne(t *testing.T) {
 	}
 	filter := bson.M{"_id": result.InsertedID}
 
-	if result, err := updateOne(collname, update, ctx, filter, nil); err != nil {
+	if result, err := updateOne(collname, &update, ctx, filter, nil); err != nil {
 		t.Fatalf("updateOne failed. err = %v", err)
 	} else if result.ModifiedCount == 0 {
 		t.Fatalf("updateOne failed. ModifiedCount = %v", result.ModifiedCount)
