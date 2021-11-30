@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	accountCollname string = "acc"
+	accountCollname string = "account"
 )
 
 func AccountCreateIndexes() ([]string, error) {

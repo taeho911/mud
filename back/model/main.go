@@ -11,6 +11,7 @@ type Model interface {
 func ConvertModelToInterface(entity []Model) []interface{} {
 	interfaces := make([]interface{}, len(entity))
 	for i, v := range entity {
+		v.SetMaketime()
 		interfaces[i] = v
 	}
 	return interfaces

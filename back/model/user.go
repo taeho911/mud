@@ -11,9 +11,9 @@ import (
 
 type User struct {
 	ID       primitive.ObjectID `bson:"_id,omitempty"`
-	Username string             `bson:"username,omitempty"`
-	Password string             `bson:"password,omitempty"`
-	Maketime time.Time          `bson:"maketime,omitempty"`
+	Username string             `bson:"username"`
+	Password string             `bson:"password"`
+	Maketime time.Time          `bson:"maketime"`
 }
 
 func (user *User) NotNullFields() []interface{} {

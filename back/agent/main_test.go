@@ -19,6 +19,8 @@ func TestMain(m *testing.M) {
 		os.Exit(-1)
 	}
 	defer DeleteClient(ctx)
+	UserCreateIndexes()
+	AccountCreateIndexes()
 	returnCode := m.Run()
 	os.Exit(returnCode)
 }
@@ -40,15 +42,25 @@ func TestMain(m *testing.M) {
 
 func TestCreateIndexes(t *testing.T) {
 	var account model.Account
-	name, err := createIndexes("test", account.IndexFields())
+	name, err := createIndexes("account", account.IndexFields())
 	if err != nil {
 		t.Fatalf("createIndexes failed. err = %v", err)
 	}
 	fmt.Println("name =", name)
 }
 
+func TestCheckNotNullFields(t *testing.T) {
+	entity := model.Test{
+		Dummy: "TestCheckNotNullFields",
+	}
+	err := checkNotNullFields(&entity)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+}
+
 func TestInsertOne(t *testing.T) {
-	collname := "test"
+	collname := "account"
 	ctx := context.TODO()
 	entity := model.Account{
 		Owner:    "testuser",
@@ -69,7 +81,7 @@ func TestInsertOne(t *testing.T) {
 }
 
 func TestInsertMany(t *testing.T) {
-	collname := "test"
+	collname := "account"
 	ctx := context.TODO()
 	insertEntity := []model.Model{
 		&model.Account{
@@ -90,13 +102,13 @@ func TestInsertMany(t *testing.T) {
 		t.Fatalf("InsertMany failed. sizeOfResult = %v", sizeOfResult)
 	}
 
-	for item := range result.InsertedIDs {
-		deleteOne(collname, ctx, bson.M{"_id": item}, nil)
+	for _, v := range result.InsertedIDs {
+		deleteOne(collname, ctx, bson.M{"_id": v}, nil)
 	}
 }
 
 func TestFindOne(t *testing.T) {
-	collname := "test"
+	collname := "account"
 	ctx := context.TODO()
 	insertEntity := model.Account{
 		Title: "TestFindOne",
@@ -117,7 +129,7 @@ func TestFindOne(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
-	collname := "test"
+	collname := "account"
 	ctx := context.TODO()
 	insertEntity := []model.Model{
 		&model.Account{
@@ -142,13 +154,13 @@ func TestFind(t *testing.T) {
 		t.Fatalf("Entity size is %v", sizeOfEntity)
 	}
 
-	for item := range result.InsertedIDs {
-		deleteOne(collname, ctx, bson.M{"_id": item}, nil)
+	for _, v := range result.InsertedIDs {
+		deleteOne(collname, ctx, bson.M{"_id": v}, nil)
 	}
 }
 
 func TestUpdateByID(t *testing.T) {
-	collname := "test"
+	collname := "account"
 	ctx := context.TODO()
 	insertEntity := model.Account{
 		Username: "TestUpdateByID",
@@ -173,7 +185,7 @@ func TestUpdateByID(t *testing.T) {
 }
 
 func TestUpdateOne(t *testing.T) {
-	collname := "test"
+	collname := "account"
 	ctx := context.TODO()
 	insertEntity := model.Account{
 		Username: "TestUpdateOne",
