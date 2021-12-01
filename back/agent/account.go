@@ -10,20 +10,16 @@ import (
 )
 
 const (
-	accountCollname string = "account"
+	ACCOUNT_COLL string = "account"
 )
 
 func AccountCreateIndexes() ([]string, error) {
 	var account model.Account
-	name, err := createIndexes(accountCollname, account.IndexFields())
-	if err != nil {
-		return nil, err
-	}
-	return name, err
+	return createIndexes(ACCOUNT_COLL, account.IndexFields())
 }
 
 func AccountInsertOne(ctx context.Context, entity model.Account) (model.Account, error) {
-	result, err := insertOne(accountCollname, &entity, ctx, nil)
+	result, err := insertOne(ACCOUNT_COLL, &entity, ctx, nil)
 	if err != nil {
 		return entity, err
 	}
@@ -36,7 +32,7 @@ func AccountFindAll(ctx context.Context) ([]model.Account, error) {
 	// mongodb의 소트에는 1(asc), -1(desc)이 존재한다.
 	option := options.Find().SetSort(bson.D{primitive.E{Key: "index", Value: 1}})
 	var entity []model.Account
-	if err := find(accountCollname, &entity, ctx, filter, option); err != nil {
+	if err := find(ACCOUNT_COLL, &entity, ctx, filter, option); err != nil {
 		return nil, err
 	}
 	return entity, nil

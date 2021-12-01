@@ -25,28 +25,12 @@ func TestMain(m *testing.M) {
 	os.Exit(returnCode)
 }
 
-// func TestMakeDatabaseURI(t *testing.T) {
-// 	uri := makeDatabaseURI()
-// 	t.Log("uri =", uri)
-// }
-
-// func TestCreateClient(t *testing.T) {
-// 	ctx := context.TODO()
-// 	if err := CreateClient(ctx); err != nil {
-// 		t.Fatalf("CreateClient(ctx) failed with %s. err = %v", makeDatabaseURI(), err)
-// 	}
-// 	if err := client.Ping(ctx, readpref.Primary()); err != nil {
-// 		t.Fatalf("client.Ping(ctx, readpref.Primary()) failed with %s. err = %v", makeDatabaseURI(), err)
-// 	}
-// }
-
 func TestCreateIndexes(t *testing.T) {
 	var account model.Account
-	name, err := createIndexes("account", account.IndexFields())
+	_, err := createIndexes("account", account.IndexFields())
 	if err != nil {
 		t.Fatalf("createIndexes failed. err = %v", err)
 	}
-	fmt.Println("name =", name)
 }
 
 func TestCheckNotNullFields(t *testing.T) {
@@ -54,8 +38,8 @@ func TestCheckNotNullFields(t *testing.T) {
 		Dummy: "TestCheckNotNullFields",
 	}
 	err := checkNotNullFields(&entity)
-	if err != nil {
-		t.Fatal(err.Error())
+	if err == nil {
+		t.Fatal("checkNotNullFields failed.")
 	}
 }
 
@@ -78,6 +62,15 @@ func TestInsertOne(t *testing.T) {
 	}
 
 	deleteOne(collname, ctx, bson.M{"_id": result.InsertedID}, nil)
+
+	entity_2 := model.Account{
+		Owner:    "testuser",
+		Password: "testpass",
+	}
+
+	if _, err := insertOne(collname, &entity_2, ctx, nil); err == nil {
+		t.Fatalf("insertOne failed.")
+	}
 }
 
 func TestInsertMany(t *testing.T) {
@@ -85,12 +78,16 @@ func TestInsertMany(t *testing.T) {
 	ctx := context.TODO()
 	insertEntity := []model.Model{
 		&model.Account{
-			Title:    "TestInsertMany",
+			Owner:    "TestInsertMany",
+			Title:    "TestInsertMany_1",
 			Username: "TestInsertMany_1",
+			Password: "TestInsertMany_1",
 		},
 		&model.Account{
-			Title:    "TestInsertMany",
+			Owner:    "TestInsertMany",
+			Title:    "TestInsertMany_2",
 			Username: "TestInsertMany_2",
+			Password: "TestInsertMany_2",
 		},
 	}
 
@@ -111,7 +108,10 @@ func TestFindOne(t *testing.T) {
 	collname := "account"
 	ctx := context.TODO()
 	insertEntity := model.Account{
-		Title: "TestFindOne",
+		Owner:    "TestFindOne",
+		Title:    "TestFindOne",
+		Username: "TestFindOne",
+		Password: "TestFindOne",
 	}
 	result, _ := insertOne(collname, &insertEntity, ctx, nil)
 
@@ -133,18 +133,22 @@ func TestFind(t *testing.T) {
 	ctx := context.TODO()
 	insertEntity := []model.Model{
 		&model.Account{
-			Title:    "TestFind",
+			Owner:    "TestFind",
+			Title:    "TestFind_1",
 			Username: "TestFind_1",
+			Password: "TestFind_1",
 		},
 		&model.Account{
-			Title:    "TestFind",
+			Owner:    "TestFind",
+			Title:    "TestFind_2",
 			Username: "TestFind_2",
+			Password: "TestFind_2",
 		},
 	}
 	result, _ := insertMany(collname, insertEntity, ctx, nil)
 
 	entity := []model.Account{}
-	filter := bson.M{"title": "TestFind"}
+	filter := bson.M{"owner": "TestFind"}
 	option := options.Find().SetSort(bson.D{primitive.E{Key: "index", Value: 1}})
 
 	if err := find(collname, &entity, ctx, filter, option); err != nil {
@@ -163,13 +167,18 @@ func TestUpdateByID(t *testing.T) {
 	collname := "account"
 	ctx := context.TODO()
 	insertEntity := model.Account{
+		Owner:    "TestUpdateByID",
+		Title:    "TestUpdateByID",
 		Username: "TestUpdateByID",
+		Password: "TestUpdateByID",
 		Email:    "TestUpdateByID@haha.com",
 		Alias:    []string{"1", "2"},
 	}
 	result, _ := insertOne(collname, &insertEntity, ctx, nil)
 
 	update := model.Account{
+		Owner:    "updatebyid",
+		Title:    "updatebyid",
 		Username: "updatebyid",
 		Password: "haha",
 		Email:    "UpdateByID@gmail.com",
@@ -188,13 +197,17 @@ func TestUpdateOne(t *testing.T) {
 	collname := "account"
 	ctx := context.TODO()
 	insertEntity := model.Account{
+		Owner:    "TestUpdateOne",
+		Title:    "TestUpdateOne",
 		Username: "TestUpdateOne",
+		Password: "TestUpdateOne",
 		Email:    "TestUpdateOne@hoho.com",
 		Memo:     "ipsum rorem",
 	}
 	result, _ := insertOne(collname, &insertEntity, ctx, nil)
 
 	update := model.Account{
+		Owner:    "foo",
 		Title:    "Hello world",
 		Username: "UpdateOne",
 		Password: "---",
@@ -211,12 +224,28 @@ func TestUpdateOne(t *testing.T) {
 	deleteOne(collname, ctx, bson.M{"_id": result.InsertedID}, nil)
 }
 
-// func TestDeleteOne(t *testing.T) {
-// 	filter := bson.M{"_id": testID}
+func TestDeleteMany(t *testing.T) {
+	collname := "account"
+	ctx := context.TODO()
+	insertEntity := []model.Model{
+		&model.Account{
+			Owner:    "TestDeleteMany",
+			Title:    "TestDeleteMany_1",
+			Username: "TestDeleteMany_1",
+			Password: "TestDeleteMany_1",
+		},
+		&model.Account{
+			Owner:    "TestDeleteMany",
+			Title:    "TestDeleteMany_2",
+			Username: "TestDeleteMany_2",
+			Password: "TestDeleteMany_2",
+		},
+	}
+	insertMany(collname, insertEntity, ctx, nil)
 
-// 	if result, err := deleteOne(testcollname, context.TODO(), filter, nil); err != nil {
-// 		t.Fatalf("deleteOne failed. err = %v", err)
-// 	} else if result.DeletedCount == 0 {
-// 		t.Fatalf("deleteOne failed. DeletedCount = %v", result.DeletedCount)
-// 	}
-// }
+	if result, err := deleteMany(collname, ctx, bson.M{"owner": "TestDeleteMany"}, nil); err != nil {
+		t.Fatalf("deleteMany failed. err = %v", err)
+	} else if result.DeletedCount != 2 {
+		t.Fatalf("deleteMany failed. result.DeletedCount = %v", result.DeletedCount)
+	}
+}

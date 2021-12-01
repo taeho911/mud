@@ -12,7 +12,7 @@ import (
 // bson:_id를 omitempty하지 않을 경우 mongodb에 insert시 000000... 의 디폴트 _id가 생성되므로 주의
 type Account struct {
 	ID       primitive.ObjectID `bson:"_id,omitempty"`
-	Owner    string             `bson:"onwer"`
+	Owner    string             `bson:"owner"`
 	Title    string             `bson:"title"`
 	Username string             `bson:"username"`
 	Password string             `bson:"password"`

@@ -9,12 +9,12 @@ import (
 )
 
 const (
-	userCollname string = "user"
+	USER_COLL string = "user"
 )
 
 func UserCreateIndexes() ([]string, error) {
 	var user model.User
-	name, err := createIndexes(userCollname, user.IndexFields())
+	name, err := createIndexes(USER_COLL, user.IndexFields())
 	if err != nil {
 		return nil, err
 	}
@@ -24,14 +24,14 @@ func UserCreateIndexes() ([]string, error) {
 func UserFindByUsername(ctx context.Context, username string) (*model.User, error) {
 	filter := bson.M{"username": username}
 	var entity model.User
-	if err := findOne(userCollname, &entity, ctx, filter, nil); err != nil {
+	if err := findOne(USER_COLL, &entity, ctx, filter, nil); err != nil {
 		return &entity, err
 	}
 	return &entity, nil
 }
 
 func UserInsertOne(ctx context.Context, entity *model.User) (*model.User, error) {
-	result, err := insertOne(userCollname, entity, ctx, nil)
+	result, err := insertOne(USER_COLL, entity, ctx, nil)
 	if err != nil {
 		return entity, err
 	}
@@ -41,7 +41,7 @@ func UserInsertOne(ctx context.Context, entity *model.User) (*model.User, error)
 
 func UserDeleteByID(ctx context.Context, id primitive.ObjectID) (int, error) {
 	filter := bson.M{"_id": id}
-	result, err := deleteOne(userCollname, ctx, filter, nil)
+	result, err := deleteOne(USER_COLL, ctx, filter, nil)
 	if err != nil {
 		return int(result.DeletedCount), err
 	}
