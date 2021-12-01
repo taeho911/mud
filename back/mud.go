@@ -3,23 +3,18 @@ package main
 import (
 	"context"
 	"flag"
-	"io"
 	"net/http"
 	"taeho/mud/agent"
+	"taeho/mud/router"
 )
 
 func main() {
 	port := flag.String("p", "8080", "Port")
 	flag.Parse()
 
-	helloHandler := func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, "Hello, world!\n")
-	}
-	http.HandleFunc("/hello", helloHandler)
-
 	ctx := context.Background()
 	agent.CreateClient(ctx)
 	defer agent.DeleteClient(ctx)
 
-	http.ListenAndServe(":"+*port, nil)
+	http.ListenAndServe(":"+*port, router.GetRouters())
 }
