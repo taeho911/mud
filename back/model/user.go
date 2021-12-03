@@ -10,10 +10,10 @@ import (
 )
 
 type User struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty"`
-	Username string             `bson:"username"`
-	Password string             `bson:"password"`
-	Maketime time.Time          `bson:"maketime"`
+	ID       primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Username string             `bson:"username" json:"username"`
+	Password string             `bson:"password" json:"password"`
+	Maketime time.Time          `bson:"maketime" json:"maketime"`
 }
 
 func (user *User) NotNullFields() []interface{} {
