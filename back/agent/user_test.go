@@ -12,27 +12,29 @@ func TestUserInsertOne(t *testing.T) {
 		Username: "TestUserInsertOne",
 		Password: "TestUserInsertOne",
 	}
-	result, err := UserInsertOne(ctx, &entity)
+	entity2 := entity
+	err := UserInsertOne(ctx, &entity)
 	if err != nil {
 		t.Fatalf("TestUserInsertOne Fail. err = %v", err)
 	}
-	t.Log("result ID =", result.ID)
-	if result.Username != entity.Username {
-		t.Fatalf("result.Username != entity.Username. result.Username = %v", result.Username)
+	t.Log("entity ID =", entity.ID)
+	t.Log("entity2 ID =", entity2.ID)
+	if entity.Username != entity2.Username {
+		t.Fatalf("result.Username != entity.Username. entity.Username = %v", entity.Username)
 	}
-	if result.Password != entity.Password {
-		t.Fatalf("result.Password != entity.Password. result.Password = %v", result.Password)
+	if entity.Password != entity2.Password {
+		t.Fatalf("result.Password != entity.Password. entity.Password = %v", entity.Password)
 	}
-	UserDeleteByID(ctx, result.ID)
+	UserDeleteByID(ctx, entity.ID)
 }
 
 func TestUserFindByUsername(t *testing.T) {
 	ctx := context.TODO()
-	entity := model.User{
+	result := model.User{
 		Username: "TestUserFindByUsername",
 		Password: "TestUserFindByUsername",
 	}
-	result, _ := UserInsertOne(ctx, &entity)
+	UserInsertOne(ctx, &result)
 	findResult, err := UserFindByUsername(ctx, result.Username)
 	if err != nil {
 		t.Fatalf("TestUserFindByUsername Fail. err = %v", err)

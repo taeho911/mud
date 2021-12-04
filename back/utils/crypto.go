@@ -19,10 +19,10 @@ const (
 	SCRYPT_KEY_LEN int = 32
 )
 
-func GenSalt(length int) ([]byte, error) {
-	salt := make([]byte, length)
-	_, err := rand.Read(salt)
-	return salt, err
+func MakeRandom(length int) ([]byte, error) {
+	random := make([]byte, length)
+	_, err := rand.Read(random)
+	return random, err
 }
 
 func HashPwd(pwd, salt []byte) ([]byte, error) {

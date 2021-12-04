@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"taeho/mud/errcode"
 )
@@ -18,7 +19,7 @@ func writeError(w http.ResponseWriter, code, msg string, status int) {
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
 	err := errcode.ErrFront{
-		Code: code,
+		Code: "MUD-ERR-" + code,
 		Msg:  msg,
 	}
 	json.NewEncoder(w).Encode(err)
@@ -34,4 +35,9 @@ func parseReqBody(body io.ReadCloser, object interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func getIP(r *http.Request) (string, error) {
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	return ip, err
 }

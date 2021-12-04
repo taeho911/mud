@@ -7,12 +7,12 @@ import (
 
 func TestGenSalt(t *testing.T) {
 	length := 16
-	salt, err := GenSalt(length)
+	salt, err := MakeRandom(length)
 	if err != nil {
-		t.Fatalf("genSalt failed. err = %v", err)
+		t.Fatalf("MakeRandom failed. err = %v", err)
 	}
 	if len(salt) != length {
-		t.Fatalf("genSalt failed. len(salt) = %v", len(salt))
+		t.Fatalf("MakeRandom failed. len(salt) = %v", len(salt))
 	}
 }
 
@@ -31,7 +31,7 @@ func TestHmacSHA256(t *testing.T) {
 func TestHashPwd(t *testing.T) {
 	password := []byte("testP@sswr0d")
 	os.Setenv("MUD_PEPPER", "testPPePPer")
-	salt, _ := GenSalt(16)
+	salt, _ := MakeRandom(16)
 	hashed, err := HashPwd(password, salt)
 	if err != nil {
 		t.Fatalf("HashPwd failed. err = %v", err)
@@ -45,7 +45,7 @@ func TestValidatePwd(t *testing.T) {
 	password1 := []byte("TestValidatePwd_1")
 	password2 := []byte("TestValidatePwd_2")
 	os.Setenv("MUD_PEPPER", "testPPePPer")
-	salt, _ := GenSalt(16)
+	salt, _ := MakeRandom(16)
 	hashed, _ := HashPwd(password1, salt)
 
 	// 동일한 패스워드를 비교할 때 false가 돌아오면 비교 실패

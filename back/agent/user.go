@@ -14,29 +14,25 @@ const (
 
 func UserCreateIndexes() ([]string, error) {
 	var user model.User
-	name, err := createIndexes(USER_COLL, user.IndexFields())
-	if err != nil {
-		return nil, err
-	}
-	return name, err
+	return createIndexes(USER_COLL, user.IndexFields())
 }
 
-func UserFindByUsername(ctx context.Context, username string) (*model.User, error) {
+func UserFindByUsername(ctx context.Context, username string) (model.User, error) {
 	filter := bson.M{"username": username}
-	var entity model.User
-	if err := findOne(USER_COLL, &entity, ctx, filter, nil); err != nil {
-		return &entity, err
+	var user model.User
+	if err := findOne(USER_COLL, &user, ctx, filter, nil); err != nil {
+		return user, err
 	}
-	return &entity, nil
+	return user, nil
 }
 
-func UserInsertOne(ctx context.Context, entity *model.User) (*model.User, error) {
-	result, err := insertOne(USER_COLL, entity, ctx, nil)
+func UserInsertOne(ctx context.Context, user *model.User) error {
+	result, err := insertOne(USER_COLL, user, ctx, nil)
 	if err != nil {
-		return entity, err
+		return err
 	}
-	entity.ID = result.InsertedID.(primitive.ObjectID)
-	return entity, nil
+	user.ID = result.InsertedID.(primitive.ObjectID)
+	return nil
 }
 
 func UserDeleteByID(ctx context.Context, id primitive.ObjectID) (int, error) {
