@@ -18,7 +18,7 @@ const (
 	SALT_LEN             int    = 16
 )
 
-func SignUp(w http.ResponseWriter, r *http.Request) {
+func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		writeError(w, errcode.INVALID_METHOD, "POST only", http.StatusBadRequest)
 	}
@@ -50,7 +50,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, user, http.StatusOK)
 }
 
-func SignIn(w http.ResponseWriter, r *http.Request) {
+func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		writeError(w, errcode.INVALID_METHOD, "POST only", http.StatusBadRequest)
 	}

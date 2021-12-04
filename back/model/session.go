@@ -21,6 +21,6 @@ func (session *Session) SetMaketime() {
 	session.Maketime = time.Now()
 }
 
-func (session *Session) GetExpirationTime() time.Time {
+func (session *Session) GetExpiryTime() time.Time {
 	return session.Maketime.Add(SESSION_TIMEOUT)
 }

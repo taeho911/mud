@@ -16,6 +16,38 @@ var (
 	sessionMap = make(map[string]model.Session)
 )
 
+func SessionTestHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("--- SessionTestHandler ---")
+
+	var bodyMap map[string]string
+	parseReqBody(r.Body, &bodyMap)
+	for key, val := range bodyMap {
+		fmt.Printf("key = %v, val = %v\n", key, val)
+	}
+
+	switch bodyMap["cmd"] {
+	case "1":
+		if err := newSession(w, r, bodyMap["username"]); err != nil {
+			fmt.Println("err =", err)
+		}
+	case "2":
+		if err := validateSession(r); err != nil {
+			fmt.Println("err =", err)
+		}
+	case "3":
+		session, err := getSession(r)
+		if err != nil {
+			fmt.Println("err =", err)
+		} else {
+			fmt.Println("session.IP =", session.IP)
+			fmt.Println("session.Username =", session.Username)
+			fmt.Println("session.Maketime =", session.Maketime)
+		}
+	case "4":
+		deleteSession(r)
+	}
+}
+
 func getSession(r *http.Request) (model.Session, error) {
 	cookie, err := r.Cookie(SESSION_KEY_COOKIE)
 	if err != nil {
@@ -38,7 +70,7 @@ func validateSession(r *http.Request) error {
 		return err
 	}
 	if sessionMap[cookie.Value].IP != ip {
-		return fmt.Errorf("invalid ip address")
+		return fmt.Errorf("invalid ip address = %v", ip)
 	}
 	return nil
 }
@@ -61,9 +93,17 @@ func newSession(w http.ResponseWriter, r *http.Request, username string) error {
 	http.SetCookie(w, &http.Cookie{
 		Name:    SESSION_KEY_COOKIE,
 		Value:   sessionKey,
-		Expires: session.GetExpirationTime(),
+		Expires: session.GetExpiryTime(),
 	})
 	return nil
+}
+
+func deleteSession(r *http.Request) {
+	cookie, err := r.Cookie(SESSION_KEY_COOKIE)
+	if err != nil {
+		return
+	}
+	delete(sessionMap, cookie.Value)
 }
 
 func makeSessionKey() (string, error) {

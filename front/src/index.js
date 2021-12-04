@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import App from './App';
 import Sign from './components/Sign';
 import Account from './components/Account';
+import Test from './components/Test';
 import './styles/global.css'
 import './styles/index.css';
 
@@ -16,6 +17,7 @@ ReactDOM.render(
           <Link to='/'>Home</Link>
           <Link to='sign'>Sign</Link>
           <Link to='account'>Account</Link>
+          <Link to='test'>Test</Link>
         </div>
       </nav>
       <div className='wrapper'>
@@ -23,6 +25,7 @@ ReactDOM.render(
           <Route path='/' element={<App />} />
           <Route path='sign' element={<Sign />} />
           <Route path='account' element={<Account />} />
+          <Route path='test' element={<Test />} />
         </Routes>
       </div>
     </BrowserRouter>
