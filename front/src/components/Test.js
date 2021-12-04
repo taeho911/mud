@@ -3,7 +3,7 @@ function Test(props) {
         e.preventDefault();
         let formData = new FormData(e.target.form);
         let jsonData = Object.fromEntries(formData.entries());
-        fetch('/test/session', {
+        fetch('/api/test/session', {
             method: 'post',
             headers: {"Content-type": "application/json;charset=UTF-8"},
             body: JSON.stringify(jsonData)
@@ -15,7 +15,7 @@ function Test(props) {
     }
 
     return (
-        <div>
+        <div className='container'>
             <h1>Test</h1>
             <form>
                 <input type='text' name='cmd' placeholder='CMD'></input><br />
