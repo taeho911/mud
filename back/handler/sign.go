@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -8,6 +9,8 @@ import (
 	"taeho/mud/errcode"
 	"taeho/mud/model"
 	"taeho/mud/utils"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -18,48 +21,79 @@ const (
 	SALT_LEN             int    = 16
 )
 
+// ----------------------------------------------------------
+// Handler Functions
+// ----------------------------------------------------------
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	if r.Method != http.MethodPost {
-		writeError(w, errcode.INVALID_METHOD, "POST only", http.StatusBadRequest)
+		writeError(w, errcode.INVALID_METHOD, "post method only", http.StatusBadRequest)
+		return
 	}
 	var user model.User
 	if err := parseReqBody(r.Body, &user); err != nil {
-		writeError(w, errcode.INVALID_REQUEST_BODY, "Invalid request body", http.StatusBadRequest)
+		writeError(w, errcode.INVALID_REQUEST_BODY, "invalid request body", http.StatusBadRequest)
+		return
 	}
 	if err := validateUsername(user); err != nil {
 		writeError(w, errcode.INVALID_USERNAME, err.Error(), http.StatusBadRequest)
+		return
 	}
 	if err := validatePassword(user); err != nil {
 		writeError(w, errcode.INVALID_PASSWORD, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if isExistUsername(ctx, user.Username) {
+		writeError(w, errcode.EXISTING_USERNAME, "username exists", http.StatusBadRequest)
+		return
 	}
 	salt, err := utils.MakeRandom(SALT_LEN)
 	if err != nil {
 		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusBadRequest)
+		return
 	}
 	hashedPwd, err := utils.HashPwd([]byte(user.Password), salt)
 	if err != nil {
 		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusBadRequest)
+		return
 	}
-	if err := agent.SaltInsertOne(r.Context(), &model.Salt{Username: user.Username, Salt: salt}); err != nil {
+	if err := agent.SaltInsertOne(ctx, &model.Salt{Username: user.Username, Salt: salt}); err != nil {
 		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusBadRequest)
+		return
 	}
 	user.Password = utils.EncodeBase64(hashedPwd)
-	if err := agent.UserInsertOne(r.Context(), &user); err != nil {
+	if err := agent.UserInsertOne(ctx, &user); err != nil {
 		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	writeJson(w, user, http.StatusOK)
+	w.WriteHeader(http.StatusOK)
 }
 
 func SignInHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	if r.Method != http.MethodPost {
-		writeError(w, errcode.INVALID_METHOD, "POST only", http.StatusBadRequest)
+		writeError(w, errcode.INVALID_METHOD, "post method only", http.StatusBadRequest)
+		return
 	}
 	var user model.User
 	if err := parseReqBody(r.Body, &user); err != nil {
-		writeError(w, errcode.INVALID_REQUEST_BODY, "Invalid request body", http.StatusBadRequest)
+		writeError(w, errcode.INVALID_REQUEST_BODY, "invalid request body", http.StatusBadRequest)
+		return
 	}
+	if err := isCorrectPwd(ctx, user); err != nil {
+		writeError(w, errcode.WRONG_USR_OR_PWD, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err := newSession(w, r, user.Username); err != nil {
+		writeError(w, errcode.CREATE_SESSION_FAILED, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
+// ----------------------------------------------------------
+// Extra Functions
+// ----------------------------------------------------------
 func validateUsername(user model.User) error {
 	if length := len(user.Username); length == 0 || length > USER_MAX_USERNAME {
 		return fmt.Errorf("username's length must be %v ~ %v. input username's length = %v", 1, USER_MAX_USERNAME, length)
@@ -97,4 +131,30 @@ func validatePassword(user model.User) error {
 		}
 	}
 	return fmt.Errorf("password should use number, lowercase and uppercase alphabet at least one")
+}
+
+func isCorrectPwd(ctx context.Context, user model.User) error {
+	salt, err := agent.SaltFindByUsername(ctx, user.Username)
+	if err != nil {
+		return err
+	}
+	dbUser, err := agent.UserFindByUsername(ctx, user.Username)
+	if err != nil {
+		return err
+	}
+	hashedPwd, err := utils.HashPwd([]byte(user.Password), salt.Salt)
+	if err != nil {
+		return err
+	}
+	if dbUser.Password != utils.EncodeBase64(hashedPwd) {
+		return fmt.Errorf("wrong username or password")
+	}
+	return nil
+}
+
+func isExistUsername(ctx context.Context, username string) bool {
+	if _, err := agent.UserFindByUsername(ctx, username); err == mongo.ErrNoDocuments {
+		return false
+	}
+	return true
 }

@@ -1,10 +1,5 @@
 package errcode
 
-type ErrFront struct {
-	Code string
-	Msg  string
-}
-
 // main.go는 공통 에러코드
 // 1000 ~ 1999
 const (

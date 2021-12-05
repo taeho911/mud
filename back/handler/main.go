@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
-	"taeho/mud/errcode"
+	"taeho/mud/model"
 )
 
 func writeJson(w http.ResponseWriter, data interface{}, status int) {
@@ -18,7 +18,7 @@ func writeJson(w http.ResponseWriter, data interface{}, status int) {
 func writeError(w http.ResponseWriter, code, msg string, status int) {
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
-	err := errcode.ErrFront{
+	err := model.Err{
 		Code: "MUD-ERR-" + code,
 		Msg:  msg,
 	}

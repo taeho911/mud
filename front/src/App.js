@@ -3,7 +3,7 @@ import './styles/app.css';
 
 function App() {
   return (
-    <div className='container'>
+    <main>
       <header>
         <img src={logo} className="app-logo" alt="logo" />
         <h1>M U D</h1>
@@ -16,7 +16,7 @@ function App() {
           Learn React
         </a>
       </header>
-    </div>
+    </main>
   );
 }
 

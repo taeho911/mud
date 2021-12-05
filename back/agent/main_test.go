@@ -19,8 +19,7 @@ func TestMain(m *testing.M) {
 		os.Exit(-1)
 	}
 	defer DeleteClient(ctx)
-	UserCreateIndexes()
-	AccountCreateIndexes()
+	CreateIndexes()
 	returnCode := m.Run()
 	os.Exit(returnCode)
 }

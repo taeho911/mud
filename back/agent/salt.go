@@ -12,7 +12,7 @@ const (
 	SALT_COLL string = "salt"
 )
 
-func SaltCreateIndexes() ([]string, error) {
+func saltCreateIndexes() ([]string, error) {
 	var salt model.Salt
 	return createIndexes(SALT_COLL, salt.IndexFields())
 }

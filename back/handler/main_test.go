@@ -2,12 +2,28 @@ package handler
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
+	"taeho/mud/agent"
 	"taeho/mud/model"
 	"testing"
 	"time"
 )
+
+func TestMain(m *testing.M) {
+	ctx := context.TODO()
+	if err := agent.CreateClient(ctx); err != nil {
+		fmt.Printf("err: %v\n", err)
+		os.Exit(-1)
+	}
+	defer agent.DeleteClient(ctx)
+	agent.CreateIndexes()
+	returnCode := m.Run()
+	os.Exit(returnCode)
+}
 
 func TestParseReqBody(t *testing.T) {
 	mockUser := model.User{

@@ -13,7 +13,7 @@ const (
 	ACCOUNT_COLL string = "account"
 )
 
-func AccountCreateIndexes() ([]string, error) {
+func accountCreateIndexes() ([]string, error) {
 	var account model.Account
 	return createIndexes(ACCOUNT_COLL, account.IndexFields())
 }

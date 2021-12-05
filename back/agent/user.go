@@ -12,7 +12,7 @@ const (
 	USER_COLL string = "user"
 )
 
-func UserCreateIndexes() ([]string, error) {
+func userCreateIndexes() ([]string, error) {
 	var user model.User
 	return createIndexes(USER_COLL, user.IndexFields())
 }

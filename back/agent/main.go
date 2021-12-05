@@ -78,6 +78,12 @@ func getColl(collname string) *mongo.Collection {
 	return client.Database(DB_NAME).Collection(collname)
 }
 
+func CreateIndexes() {
+	userCreateIndexes()
+	saltCreateIndexes()
+	accountCreateIndexes()
+}
+
 // 각 콜렉션별로 필요한 인덱스들을 모델에서 추출하여 작성한다.
 func createIndexes(collname string, indexModels []mongo.IndexModel) ([]string, error) {
 	return getColl(collname).Indexes().CreateMany(context.TODO(), indexModels, nil)

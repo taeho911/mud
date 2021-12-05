@@ -1,34 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import App from './App';
-import Sign from './components/Sign';
-import Account from './components/Account';
-import Test from './components/Test';
+import { UserProvider } from './context/UserContext';
+import Nav from './Nav';
 import './styles/global.css'
 import './styles/index.css';
 
 ReactDOM.render(
   <div className='background'>
-    <BrowserRouter>
-      <nav className='nav'>
-        <div className='nav-container'>
-          <Link to='/'>Home</Link>
-          <Link to='sign'>Sign</Link>
-          <Link to='account'>Account</Link>
-          <Link to='test'>Test</Link>
-        </div>
-      </nav>
-      <div className='wrapper'>
-        <Routes>
-          <Route path='/' element={<App />} />
-          <Route path='sign' element={<Sign />} />
-          <Route path='account' element={<Account />} />
-          <Route path='test' element={<Test />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <UserProvider>
+      <Nav />
+    </UserProvider>
   </div>,
   document.getElementById('root')
 );

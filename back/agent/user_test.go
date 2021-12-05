@@ -4,6 +4,8 @@ import (
 	"context"
 	"taeho/mud/model"
 	"testing"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func TestUserInsertOne(t *testing.T) {
@@ -35,6 +37,7 @@ func TestUserFindByUsername(t *testing.T) {
 		Password: "TestUserFindByUsername",
 	}
 	UserInsertOne(ctx, &result)
+
 	findResult, err := UserFindByUsername(ctx, result.Username)
 	if err != nil {
 		t.Fatalf("TestUserFindByUsername Fail. err = %v", err)
@@ -48,5 +51,12 @@ func TestUserFindByUsername(t *testing.T) {
 	if findResult.Password != result.Password {
 		t.Fatalf("findResult.Password != result.Password. findResult.Password = %v", findResult.Password)
 	}
+
 	UserDeleteByID(ctx, result.ID)
+
+	findResult2, err := UserFindByUsername(ctx, "NonExistUsername")
+	if err != mongo.ErrNoDocuments {
+		t.Logf("findResult2 = %v", findResult2)
+		t.Fatalf("TestUserFindByUsername Fail. err = %v", err)
+	}
 }

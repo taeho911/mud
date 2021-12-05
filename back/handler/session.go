@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"taeho/mud/model"
 	"taeho/mud/utils"
+	"time"
 )
 
 const (
@@ -13,9 +14,14 @@ const (
 )
 
 var (
+	// 세션을 AP메모리 상에서 관리하기 위한 map
+	// kubernetes의 분산 디플로이 환경에서는 sticky session 설정이 필요
 	sessionMap = make(map[string]model.Session)
 )
 
+// ----------------------------------------------------------
+// Handler Functions
+// ----------------------------------------------------------
 func SessionTestHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("--- SessionTestHandler ---")
 
@@ -44,10 +50,13 @@ func SessionTestHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("session.Maketime =", session.Maketime)
 		}
 	case "4":
-		deleteSession(r)
+		deleteSession(w, r)
 	}
 }
 
+// ----------------------------------------------------------
+// Extra Functions
+// ----------------------------------------------------------
 func getSession(r *http.Request) (model.Session, error) {
 	cookie, err := r.Cookie(SESSION_KEY_COOKIE)
 	if err != nil {
@@ -98,12 +107,17 @@ func newSession(w http.ResponseWriter, r *http.Request, username string) error {
 	return nil
 }
 
-func deleteSession(r *http.Request) {
+func deleteSession(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(SESSION_KEY_COOKIE)
 	if err != nil {
 		return
 	}
 	delete(sessionMap, cookie.Value)
+	http.SetCookie(w, &http.Cookie{
+		Name:    SESSION_KEY_COOKIE,
+		Value:   "",
+		Expires: time.Now(),
+	})
 }
 
 func makeSessionKey() (string, error) {

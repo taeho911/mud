@@ -4,6 +4,7 @@
 }
 
 .nav {
+  font-size: 20px;
   min-height: 6vh;
 }
 
@@ -32,10 +33,41 @@
   color: white;
 }
 
-.container {
-  margin-bottom: 20vh;
+main, .container {
+  margin-bottom: 15vh;
 }
 
 .link {
   color: #61dafb;
+}
+
+.active {
+  color: #61dafb;
+}
+
+button {
+  margin: 20px;
+  padding: 10px;
+  font-size: 15px;
+  color: white;
+  background-color: #333;
+  border: 1px solid white;
+  outline: none;
+  transition-duration: 500ms;
+  border-radius: 1em;
+}
+
+button:hover {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #61dafb7e;
+}
+
+input {
+  font-size: 20px;
+}
+
+.err {
+  font-size: 15px;
+  color: #ff3e00;
 }
