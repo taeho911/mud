@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import errors from '../errors';
 
 function SignUp() {
-  const [err, setErr] = useState({code: '', msg: ''});
+  const [err, setErr] = useState(errors.noError);
 
   const signUp = e => {
     e.preventDefault();
@@ -9,12 +10,12 @@ function SignUp() {
     let jsonData = Object.fromEntries(formData.entries());
 
     if (jsonData.username === '' || jsonData.password === '') {
-      setErr({code: '0001', msg: 'username/password empty'});
+      setErr(errors.emptyField);
       return
     }
 
     if (jsonData.password !== jsonData.password_confirm) {
-      setErr({code: '0002', msg: 'wrong password confirm'});
+      setErr(errors.wrongPwdConfirm);
       return
     }
 

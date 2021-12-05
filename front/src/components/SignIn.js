@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import errors from '../errors';
 
 function SignIn() {
-  const [err, setErr] = useState({code: '', msg: ''});
+  const [err, setErr] = useState(errors.noError);
 
   const signIn = e => {
     e.preventDefault();
