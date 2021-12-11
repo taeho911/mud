@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { UserContext } from './context/UserContext';
 import App from './App';
@@ -8,17 +8,24 @@ import Money from './components/Money';
 import Test from './components/Test';
 
 function Nav() {
-  const [signed, setSigned] = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
+
+  // SPA의 유저 세션 유지를 위한 코드
+  useEffect(() => {
+    fetch('/api/sign/confirm').then(res => {
+      if (res.status === 200) res.json().then(data => setUser(data));
+    });
+  }, []);
   
   return (
     <BrowserRouter>
       <nav className='nav'>
         <div className='nav-container'>
           <Link to='/'>Mud</Link>
-          {!signed && 
+          {!user && 
             <Link to='sign'>Sign</Link>
           }
-          {signed &&
+          {user &&
             <React.Fragment>
               <Link to='account'>Account</Link>
               <Link to='money'>Money</Link>
@@ -30,10 +37,10 @@ function Nav() {
       <div className='wrapper'>
         <Routes>
           <Route path='/' element={<App />} />
-          {!signed && 
+          {!user && 
             <Route path='sign' element={<Sign />} />
           }
-          {signed &&
+          {user &&
             <React.Fragment>
               <Route path='account' element={<Account />} />
               <Route path='money' element={<Money />} />

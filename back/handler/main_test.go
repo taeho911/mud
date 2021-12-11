@@ -52,3 +52,22 @@ func TestParseReqBody(t *testing.T) {
 		t.Fatalf("resultUser.Password = %v, mockUser.Password = %v", resultUser.Password, mockUser.Password)
 	}
 }
+
+func TestGetIP(t *testing.T) {
+	testcases := []string{"127.0.0.1:5000", "0.0.0.0", "0.0.0"}
+	for i, v := range testcases {
+		request := http.Request{
+			RemoteAddr: v,
+		}
+		switch i {
+		case 0:
+			if ip, err := getIP(&request); err != nil {
+				t.Fatalf("ip = %v,err = %v", ip, err)
+			}
+		case 1, 2:
+			if ip, err := getIP(&request); err == nil {
+				t.Fatalf("ip = %v,err = %v", ip, err)
+			}
+		}
+	}
+}

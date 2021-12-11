@@ -1,19 +1,19 @@
 .sign-container {
-  padding: 20px 50px;
+  padding: 20px 20px;
   border: 1px solid;
 }
 
 .sign-tab-box {
-  font-size: 15px;
-  margin-bottom: 10px;
+  font-size: calc(10px + 1vmin);
+  margin-bottom: 2vh;
 }
 
 .sign-tab {
-  margin: 0px 20px;
+  margin: 0 4vw;
 }
 
 .sign-tab-active {
-  margin: 0px 20px;
+  margin: 0 4vw;
   color: #61dafb;
 }
 

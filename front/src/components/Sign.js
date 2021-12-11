@@ -18,7 +18,7 @@ function Sign() {
       </div>
       {isSignIn
         ? <SignIn />
-        : <SignUp />
+        : <SignUp setIsSignIn={setIsSignIn} />
       }
     </main>
   );

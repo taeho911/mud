@@ -1,30 +1,35 @@
 import { useState } from 'react';
-import errors from '../errors';
 
-function SignUp() {
-  const [err, setErr] = useState(errors.noError);
+function SignUp(props) {
+  const [err, setErr] = useState('');
 
   const signUp = e => {
     e.preventDefault();
-    let formData = new FormData(e.target.form);
-    let jsonData = Object.fromEntries(formData.entries());
+    setErr('');
+    let formdata = new FormData(e.target.form);
+    let jsondata = Object.fromEntries(formdata.entries());
 
-    if (jsonData.username === '' || jsonData.password === '') {
-      setErr(errors.emptyField);
-      return
+    if (jsondata.username === '' || jsondata.password === '') {
+      setErr('Fill out username and password');
+      return;
     }
 
-    if (jsonData.password !== jsonData.password_confirm) {
-      setErr(errors.wrongPwdConfirm);
-      return
+    if (jsondata.password !== jsondata.password_confirm) {
+      setErr('Check password confirmation');
+      return;
     }
 
     fetch('/api/sign/up', {
       method: 'post',
       headers: {'Content-type': 'application/json;charset=UTF-8'},
-      body: JSON.stringify(jsonData)
+      body: JSON.stringify(jsondata)
     }).then(res => {
-      console.log(res);
+      if (res.status === 200) {
+        alert('Sign up succeed');
+        props.setIsSignIn(true);
+      } else {
+        res.text().then(err => setErr(err));
+      }
     });
   }
 
@@ -38,7 +43,7 @@ function SignUp() {
         <button onClick={signUp}>Submit</button>
         <button type='reset'>Reset</button>
       </form>
-      {err.msg !== '' && <div className='err'>{`<${err.code}> ${err.msg}`}</div>}
+      <div className='err'>{err}</div>
     </div>
   );
 }

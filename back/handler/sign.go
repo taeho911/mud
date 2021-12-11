@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"taeho/mud/agent"
-	"taeho/mud/errcode"
+	"taeho/mud/errors"
 	"taeho/mud/model"
 	"taeho/mud/utils"
 
@@ -27,43 +27,43 @@ const (
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	if r.Method != http.MethodPost {
-		writeError(w, errcode.INVALID_METHOD, "post method only", http.StatusBadRequest)
+		writeError(w, errors.INVALID_METHOD, "post method only", http.StatusBadRequest)
 		return
 	}
 	var user model.User
 	if err := parseReqBody(r.Body, &user); err != nil {
-		writeError(w, errcode.INVALID_REQUEST_BODY, "invalid request body", http.StatusBadRequest)
+		writeError(w, errors.INVALID_REQUEST_BODY, err.Error(), http.StatusBadRequest)
 		return
 	}
 	if err := validateUsername(user); err != nil {
-		writeError(w, errcode.INVALID_USERNAME, err.Error(), http.StatusBadRequest)
+		writeError(w, errors.INVALID_USERNAME, err.Error(), http.StatusBadRequest)
 		return
 	}
 	if err := validatePassword(user); err != nil {
-		writeError(w, errcode.INVALID_PASSWORD, err.Error(), http.StatusBadRequest)
+		writeError(w, errors.INVALID_PASSWORD, err.Error(), http.StatusBadRequest)
 		return
 	}
 	if isExistUsername(ctx, user.Username) {
-		writeError(w, errcode.EXISTING_USERNAME, "username exists", http.StatusBadRequest)
+		writeError(w, errors.EXISTING_USERNAME, "username exists", http.StatusBadRequest)
 		return
 	}
 	salt, err := utils.MakeRandom(SALT_LEN)
 	if err != nil {
-		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusBadRequest)
+		writeError(w, errors.FAILED_POST, err.Error(), http.StatusBadRequest)
 		return
 	}
 	hashedPwd, err := utils.HashPwd([]byte(user.Password), salt)
 	if err != nil {
-		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusBadRequest)
+		writeError(w, errors.FAILED_POST, err.Error(), http.StatusBadRequest)
 		return
 	}
 	if err := agent.SaltInsertOne(ctx, &model.Salt{Username: user.Username, Salt: salt}); err != nil {
-		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusBadRequest)
+		writeError(w, errors.FAILED_POST, err.Error(), http.StatusBadRequest)
 		return
 	}
 	user.Password = utils.EncodeBase64(hashedPwd)
 	if err := agent.UserInsertOne(ctx, &user); err != nil {
-		writeError(w, errcode.FAILED_POST, err.Error(), http.StatusInternalServerError)
+		writeError(w, errors.FAILED_POST, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -72,23 +72,38 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	if r.Method != http.MethodPost {
-		writeError(w, errcode.INVALID_METHOD, "post method only", http.StatusBadRequest)
+		writeError(w, errors.INVALID_METHOD, "post method only", http.StatusBadRequest)
 		return
 	}
 	var user model.User
 	if err := parseReqBody(r.Body, &user); err != nil {
-		writeError(w, errcode.INVALID_REQUEST_BODY, "invalid request body", http.StatusBadRequest)
+		writeError(w, errors.INVALID_REQUEST_BODY, "invalid request body", http.StatusBadRequest)
 		return
 	}
 	if err := isCorrectPwd(ctx, user); err != nil {
-		writeError(w, errcode.WRONG_USR_OR_PWD, err.Error(), http.StatusBadRequest)
+		writeError(w, errors.WRONG_USR_OR_PWD, err.Error(), http.StatusBadRequest)
 		return
 	}
 	if err := newSession(w, r, user.Username); err != nil {
-		writeError(w, errcode.CREATE_SESSION_FAILED, err.Error(), http.StatusInternalServerError)
+		writeError(w, errors.CREATE_SESSION_FAILED, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	writeJson(w, model.User{Username: user.Username}, http.StatusOK)
+}
+
+func SignConfirmHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := getSession(r)
+	if err != nil {
+		deleteSession(w, r)
+		writeError(w, errors.UNAUTHORIZED, err.Error(), http.StatusUnauthorized)
+		return
+	}
+	if err := updateSession(r); err != nil {
+		deleteSession(w, r)
+		writeError(w, errors.UNAUTHORIZED, err.Error(), http.StatusUnauthorized)
+		return
+	}
+	writeJson(w, model.User{Username: session.username}, http.StatusOK)
 }
 
 // ----------------------------------------------------------
@@ -111,7 +126,7 @@ func validateUsername(user model.User) error {
 // 알파뱃 대소문자, 숫자, 특수기호를 각각 하나 이상씩 사용
 func validatePassword(user model.User) error {
 	if length := len(user.Password); length < USRE_MIN_PASSWORD || length > USRE_MAX_PASSWORD {
-		return fmt.Errorf("password's length must be %v ~ %v. input password's length = %v", 1, USER_MAX_USERNAME, length)
+		return fmt.Errorf("password's length must be %v ~ %v. input password's length = %v", USRE_MIN_PASSWORD, USER_MAX_USERNAME, length)
 	}
 	symbolRe := regexp.MustCompile(`[_!@#$%^&*?]`)
 	if !symbolRe.MatchString(user.Password) {

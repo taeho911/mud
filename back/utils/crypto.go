@@ -57,3 +57,11 @@ func EncodeBase64(origin []byte) string {
 func DecodeBase64(str string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(str)
 }
+
+func UrlEncodeBase64(origin []byte) string {
+	return base64.URLEncoding.EncodeToString(origin)
+}
+
+func UrlDecodeBase64(str string) ([]byte, error) {
+	return base64.URLEncoding.DecodeString(str)
+}

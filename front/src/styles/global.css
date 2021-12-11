@@ -4,16 +4,16 @@
 }
 
 .nav {
-  font-size: 20px;
+  font-size: calc(10px + 1vmin);
   min-height: 6vh;
 }
 
 .nav > .nav-container {
-  padding-top: 1em;
+  padding-top: 1vh;
 }
 
 .nav > .nav-container > a {
-  margin-left: 1em;
+  margin-left: calc(5px + 2vmin);
   color: white;
   text-decoration: none;
 }
@@ -29,7 +29,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(15px + 1vmin);
   color: white;
 }
 
@@ -46,28 +46,34 @@ main, .container {
 }
 
 button {
-  margin: 20px;
-  padding: 10px;
-  font-size: 15px;
+  margin: 2vh 1vw;
+  padding: 1vh 1vw;
+  font-size: calc(10px + 1vmin);
   color: white;
   background-color: #333;
   border: 1px solid white;
   outline: none;
-  transition-duration: 500ms;
   border-radius: 1em;
+  transition-duration: 500ms;
 }
 
 button:hover {
-  font-size: 20px;
+  font-size: calc(15px + 1vmin);
   cursor: pointer;
   background-color: #61dafb7e;
 }
 
 input {
-  font-size: 20px;
+  font-size: calc(10px + 1vmin);
+  margin: 1vh 0;
 }
 
 .err {
-  font-size: 15px;
+  font-size: calc(10px + 1vmin);
   color: #ff3e00;
+}
+
+.succeed {
+  font-size: calc(10px + 1vmin);
+  color: greenyellow;
 }

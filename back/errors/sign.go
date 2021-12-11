@@ -1,4 +1,4 @@
-package errcode
+package errors
 
 // sign.go는 sign handler용 에러코드
 // 2000 ~ 2999

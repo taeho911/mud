@@ -1,10 +1,11 @@
 import { useState, createContext } from "react";
 
 export const UserContext = createContext();
+
 export const UserProvider = props => {
-  const [signed, setSigned] = useState(false);
+  const [user, setUser] = useState(undefined);
   return (
-    <UserContext.Provider value={[signed, setSigned]}>
+    <UserContext.Provider value={[user, setUser]}>
       {props.children}
     </UserContext.Provider>
   );

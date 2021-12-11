@@ -5,6 +5,7 @@
 # ---------------------------------------------------
 CMD=$1
 ROOTDIR=`pwd`
+NOW=`date`
 
 # ---------------------------------------------------
 # Functions
@@ -19,18 +20,20 @@ npm_install() {
 
 build_back() {
     cd $ROOTDIR/back
+    echo "--- BACK ${NOW} ---" >> $ROOTDIR/$BUILD_LOG
     go install 2>&1 >> $ROOTDIR/$BUILD_LOG &
 }
 
 build_front() {
     cd $ROOTDIR/front
     npm_install
+    echo "--- FRONT ${NOW} ---" >> $ROOTDIR/$BUILD_LOG
     npm run build 2>&1 >> $ROOTDIR/$BUILD_LOG &
 }
 
 start_back() {
     mkdir -p $ROOTDIR/logs
-    echo "--- START ${date} ---" >> $ROOTDIR/$BACK_LOG
+    echo "--- START ${NOW} ---" >> $ROOTDIR/$BACK_LOG
     mud 2>&1 >> $ROOTDIR/$BACK_LOG &
 }
 
@@ -38,7 +41,7 @@ start_front() {
     cd $ROOTDIR/front
     npm_install
     mkdir -p $ROOTDIR/logs
-    echo "--- START ${date} ---" >> $ROOTDIR/$BACK_LOG
+    echo "--- START ${NOW} ---" >> $ROOTDIR/$BACK_LOG
     npm start 2>&1 >> $ROOTDIR/$FRONT_LOG &
 }
 
@@ -51,11 +54,11 @@ open_log_front() {
 }
 
 kill_back() {
-    kill `ps | grep 'mud$' | awk '{print $1}'`
+    kill `ps | grep 'mud$' | awk '{print $1}'` 2>&1 > /dev/null
 }
 
 kill_front() {
-    kill `ps | grep 'node$' | awk '{print $1}'`
+    kill `ps | grep 'node$' | awk '{print $1}'` 2>&1 > /dev/null
 }
 
 # ---------------------------------------------------
