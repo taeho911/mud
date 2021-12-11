@@ -3,7 +3,7 @@ function Account() {
     <main>
       <h1>Account Management</h1>
     </main>
-  );
+  )
 }
 
-export default Account;
+export default Account

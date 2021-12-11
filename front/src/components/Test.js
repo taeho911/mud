@@ -1,17 +1,17 @@
 function Test(props) {
   const sessionTest = e => {
-    e.preventDefault();
-    let formData = new FormData(e.target.form);
-    let jsonData = Object.fromEntries(formData.entries());
+    e.preventDefault()
+    let formData = new FormData(e.target.form)
+    let jsonData = Object.fromEntries(formData.entries())
     fetch('/api/test/session', {
       method: 'post',
-      headers: {'Content-type': 'application/json;charset=UTF-8'},
+      headers: {'Content-type': 'application/jsoncharset=UTF-8'},
       body: JSON.stringify(jsonData)
     }).then(res => res.json()).then(data => {
-      console.log(data);
+      console.log(data)
     }).catch(err => {
-      console.log(err);
-    });
+      console.log(err)
+    })
   }
 
   return (
@@ -24,7 +24,7 @@ function Test(props) {
         <button onClick={e => sessionTest(e)}>Session Test</button>
       </form>
     </main>
-  );
+  )
 }
 
-export default Test;
+export default Test

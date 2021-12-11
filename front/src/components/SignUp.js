@@ -1,22 +1,22 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 function SignUp(props) {
-  const [err, setErr] = useState('');
+  const [err, setErr] = useState('')
 
   const signUp = e => {
-    e.preventDefault();
-    setErr('');
-    let formdata = new FormData(e.target.form);
-    let jsondata = Object.fromEntries(formdata.entries());
+    e.preventDefault()
+    setErr('')
+    let formdata = new FormData(e.target.form)
+    let jsondata = Object.fromEntries(formdata.entries())
 
     if (jsondata.username === '' || jsondata.password === '') {
-      setErr('Fill out username and password');
-      return;
+      setErr('Fill out username and password')
+      return
     }
 
     if (jsondata.password !== jsondata.password_confirm) {
-      setErr('Check password confirmation');
-      return;
+      setErr('Check password confirmation')
+      return
     }
 
     fetch('/api/sign/up', {
@@ -25,12 +25,12 @@ function SignUp(props) {
       body: JSON.stringify(jsondata)
     }).then(res => {
       if (res.status === 200) {
-        alert('Sign up succeed');
-        props.setIsSignIn(true);
+        alert('Sign up succeed')
+        props.setIsSignIn(true)
       } else {
-        res.text().then(err => setErr(err));
+        res.text().then(err => setErr(err))
       }
-    });
+    })
   }
 
   return (
@@ -45,7 +45,7 @@ function SignUp(props) {
       </form>
       <div className='err'>{err}</div>
     </div>
-  );
+  )
 }
 
-export default SignUp;
+export default SignUp

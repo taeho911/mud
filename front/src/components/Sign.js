@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import '../styles/sign.css';
+import { useState } from 'react'
+import SignIn from './SignIn'
+import SignUp from './SignUp'
+import '../styles/sign.css'
 
 function Sign() {
-  const [isSignIn, setIsSignIn] = useState(true);
+  const [isSignIn, setIsSignIn] = useState(true)
 
   return (
     <main className='sign-container'>
@@ -21,7 +21,7 @@ function Sign() {
         : <SignUp setIsSignIn={setIsSignIn} />
       }
     </main>
-  );
+  )
 }
 
-export default Sign;
+export default Sign

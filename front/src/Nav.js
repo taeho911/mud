@@ -1,21 +1,21 @@
-import React, { useContext, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { UserContext } from './context/UserContext';
-import App from './App';
-import Sign from './components/Sign';
-import Account from './components/Account';
-import Money from './components/Money';
-import Test from './components/Test';
+import React, { useContext, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { UserContext } from './context/UserContext'
+import App from './App'
+import Sign from './components/Sign'
+import Account from './components/Account'
+import Money from './components/Money'
+import Test from './components/Test'
 
 function Nav() {
-  const [user, setUser] = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext)
 
   // SPA의 유저 세션 유지를 위한 코드
   useEffect(() => {
     fetch('/api/sign/confirm').then(res => {
-      if (res.status === 200) res.json().then(data => setUser(data));
-    });
-  }, []);
+      if (res.status === 200) res.json().then(data => setUser(data))
+    })
+  }, [])
   
   return (
     <BrowserRouter>
@@ -50,7 +50,7 @@ function Nav() {
         </Routes>
       </div>
     </BrowserRouter>
-  );
+  )
 }
 
-export default Nav;
+export default Nav

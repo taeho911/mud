@@ -1,17 +1,17 @@
-import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
+import { useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../context/UserContext'
 
 function SignIn() {
-  const [user, setUser] = useContext(UserContext);
-  const [err, setErr] = useState('');
-  const navigate = useNavigate();
+  const [user, setUser] = useContext(UserContext)
+  const [err, setErr] = useState('')
+  const navigate = useNavigate()
 
   const signIn = e => {
-    e.preventDefault();
-    setErr('');
-    let formData = new FormData(e.target.form);
-    let jsonData = Object.fromEntries(formData.entries());
+    e.preventDefault()
+    setErr('')
+    let formData = new FormData(e.target.form)
+    let jsonData = Object.fromEntries(formData.entries())
 
     fetch('/api/sign/in', {
       method: 'post',
@@ -19,14 +19,14 @@ function SignIn() {
       body: JSON.stringify(jsonData)
     }).then(res => {
       if (res.status === 200) {
-        res.json().then(user => {
-          setUser(user);
+        res.json().then(data => {
+          setUser(data)
           navigate('/', { replace: true })
-        });
+        })
       } else {
-        res.text().then(err => setErr(err));
+        res.text().then(err => setErr(err))
       }
-    });
+    })
   }
 
   return (
@@ -40,7 +40,7 @@ function SignIn() {
       </form>
       <div className='err'>{err}</div>
     </div>
-  );
+  )
 }
 
-export default SignIn;
+export default SignIn
