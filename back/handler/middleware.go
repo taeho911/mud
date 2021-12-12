@@ -14,14 +14,14 @@ const (
 
 func Auth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		session, err := getSession(r)
+		session, err := SessionManager.get(r)
 		if err != nil {
-			deleteSession(w, r)
+			SessionManager.delete(w, r)
 			writeError(w, errors.UNAUTHORIZED, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		if err := updateSession(r); err != nil {
-			deleteSession(w, r)
+		if err := SessionManager.refresh(r); err != nil {
+			SessionManager.delete(w, r)
 			writeError(w, errors.UNAUTHORIZED, err.Error(), http.StatusUnauthorized)
 			return
 		}

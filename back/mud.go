@@ -5,8 +5,17 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"runtime"
 	"taeho/mud/agent"
+	"taeho/mud/handler"
 	"taeho/mud/router"
+	"time"
+)
+
+const (
+	DEFAULT_PORT    string        = "8080"
+	SES_GC_INTERVAL time.Duration = 3 * time.Minute
+	SES_GC_PERCENT  float64       = float64(50)
 )
 
 func main() {
@@ -14,7 +23,7 @@ func main() {
 	// frontend에서는 backend API endpoint를 지정하는데 사용
 	port := os.Getenv("API_PORT")
 	if len(port) == 0 {
-		port = "8080"
+		port = DEFAULT_PORT
 	}
 
 	ctx := context.Background()
@@ -25,6 +34,22 @@ func main() {
 	// DB의 scalability를 위해 DB 설정을 전부 AP에서 처리
 	agent.CreateIndexes()
 
-	fmt.Println("Backend listen to", port)
+	// 만료 세션을 주기적으로 청소하는 GC 가동
+	go sessionGC()
+
+	fmt.Println("MUD api server is listening to", port)
 	http.ListenAndServe(":"+port, router.GetRouters())
+}
+
+func sessionGC() {
+	for {
+		var memstat runtime.MemStats
+		runtime.ReadMemStats(&memstat)
+
+		if float64(memstat.Alloc)/float64(memstat.Sys)*100 > SES_GC_PERCENT {
+			handler.SessionManager.GC()
+		}
+
+		time.Sleep(SES_GC_INTERVAL)
+	}
 }

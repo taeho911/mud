@@ -25,12 +25,10 @@ function Nav() {
           {!user && 
             <Link to='sign'>Sign</Link>
           }
-          {user &&
-            <React.Fragment>
-              <Link to='account'>Account</Link>
-              <Link to='money'>Money</Link>
-            </React.Fragment>
-          }
+          {user && <>
+            <Link to='account'>Account</Link>
+            <Link to='money'>Money</Link>
+          </>}
           <Link to='test'>Test</Link>
         </div>
       </nav>
@@ -40,12 +38,10 @@ function Nav() {
           {!user && 
             <Route path='sign' element={<Sign />} />
           }
-          {user &&
-            <React.Fragment>
-              <Route path='account' element={<Account />} />
-              <Route path='money' element={<Money />} />
-            </React.Fragment>
-          }
+          {user && <>
+            <Route path='account' element={<Account />} />
+            <Route path='money' element={<Money />} />
+          </>}
           <Route path='test' element={<Test />} />
         </Routes>
       </div>

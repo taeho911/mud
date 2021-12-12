@@ -84,7 +84,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		writeError(w, errors.WRONG_USR_OR_PWD, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := newSession(w, r, user.Username); err != nil {
+	if err := SessionManager.new(w, r, user.Username); err != nil {
 		writeError(w, errors.CREATE_SESSION_FAILED, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -92,14 +92,14 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignConfirmHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := getSession(r)
+	session, err := SessionManager.get(r)
 	if err != nil {
-		deleteSession(w, r)
+		SessionManager.delete(w, r)
 		writeError(w, errors.UNAUTHORIZED, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	if err := updateSession(r); err != nil {
-		deleteSession(w, r)
+	if err := SessionManager.refresh(r); err != nil {
+		SessionManager.delete(w, r)
 		writeError(w, errors.UNAUTHORIZED, err.Error(), http.StatusUnauthorized)
 		return
 	}
@@ -123,29 +123,23 @@ func validateUsername(user model.User) error {
 // 패스워드는 아래의 조건을 만족해야 한다.
 // 8 <= x <= 16
 // 알파벳 대소문자, 숫자, 특수기호의 조합
-// 알파뱃 대소문자, 숫자, 특수기호를 각각 하나 이상씩 사용
+// 알파뱃, 숫자를 각각 하나 이상씩 사용
 func validatePassword(user model.User) error {
 	if length := len(user.Password); length < USRE_MIN_PASSWORD || length > USRE_MAX_PASSWORD {
-		return fmt.Errorf("password's length must be %v ~ %v. input password's length = %v", USRE_MIN_PASSWORD, USER_MAX_USERNAME, length)
+		return fmt.Errorf("password's length must be %v ~ %v", USRE_MIN_PASSWORD, USER_MAX_USERNAME)
 	}
-	symbolRe := regexp.MustCompile(`[_!@#$%^&*?]`)
-	if !symbolRe.MatchString(user.Password) {
-		return fmt.Errorf("password should use special symbol at least one")
-	}
-	var number, lower, upper bool
+	var number, lower bool
 	for _, v := range user.Password {
 		if v >= '0' && v <= '9' {
 			number = true
 		} else if v >= 'a' && v <= 'z' {
 			lower = true
-		} else if v >= 'A' && v <= 'Z' {
-			upper = true
 		}
-		if number && lower && upper {
+		if number && lower {
 			return nil
 		}
 	}
-	return fmt.Errorf("password should use number, lowercase and uppercase alphabet at least one")
+	return fmt.Errorf("password must use number, alphabet at least one")
 }
 
 func isCorrectPwd(ctx context.Context, user model.User) error {

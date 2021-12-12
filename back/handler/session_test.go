@@ -11,11 +11,11 @@ func TestNewSession(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/", nil)
 	username := "TestNewSession"
-	if err := newSession(w, r, username); err != nil {
+	if err := SessionManager.new(w, r, username); err != nil {
 		t.Fatalf("err = %v", err)
 	}
 	key := w.Result().Cookies()[0].Value
-	session := sessionMap[key]
+	session := SessionManager.m[key]
 	if session.username != username {
 		t.Fatalf("session.username = %v", session.username)
 	}
@@ -25,10 +25,10 @@ func TestGetSession(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/", nil)
 	username := "TestGetSession"
-	newSession(w, r, username)
+	SessionManager.new(w, r, username)
 
 	copyCookieFromResToReq(w, r)
-	session, err := getSession(r)
+	session, err := SessionManager.get(r)
 	if err != nil {
 		t.Fatalf("err = %v", err)
 	}
@@ -41,18 +41,18 @@ func TestUpdateSession(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/", nil)
 	username := "TestUpdateSession"
-	newSession(w, r, username)
+	SessionManager.new(w, r, username)
 
 	copyCookieFromResToReq(w, r)
-	beforeSession, _ := getSession(r)
+	beforeSession, _ := SessionManager.get(r)
 	beforeTime := beforeSession.maketime
 
 	time.Sleep(1 * time.Second)
-	if err := updateSession(r); err != nil {
+	if err := SessionManager.refresh(r); err != nil {
 		t.Fatalf("err = %v", err)
 	}
 
-	afterSession, _ := getSession(r)
+	afterSession, _ := SessionManager.get(r)
 	afterTime := afterSession.maketime
 	if !beforeTime.Before(afterTime) {
 		t.Fatalf("beforeTime = %v, afterTime = %v", beforeTime, afterTime)
@@ -63,14 +63,72 @@ func TestDeleteSession(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/", nil)
 	username := "TestDeleteSession"
-	newSession(w, r, username)
+	SessionManager.new(w, r, username)
 
 	copyCookieFromResToReq(w, r)
-	deleteSession(w, r)
+	SessionManager.delete(w, r)
 
-	if _, err := getSession(r); err == nil {
+	if _, err := SessionManager.get(r); err == nil {
 		t.Fatalf("deleteSession failed.")
 	}
+}
+
+func TestConcSessionReadAndWrite(t *testing.T) {
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodPost, "/", nil)
+	username := "TestConcSessionReadAndWrite"
+	SessionManager.new(w, r, username)
+
+	copyCookieFromResToReq(w, r)
+
+	quit := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-quit:
+				return
+			default:
+				SessionManager.new(httptest.NewRecorder(), r, username)
+			}
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-quit:
+				return
+			default:
+				SessionManager.get(r)
+			}
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-quit:
+				return
+			default:
+				SessionManager.refresh(r)
+			}
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-quit:
+				return
+			default:
+				SessionManager.GC()
+			}
+		}
+	}()
+
+	time.Sleep(5 * time.Second)
+	quit <- true
 }
 
 func copyCookieFromResToReq(w *httptest.ResponseRecorder, r *http.Request) {

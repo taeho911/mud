@@ -69,8 +69,7 @@ setenv
 case $CMD in
 
 "build")
-    build_back
-    build_front
+    build_back && build_front
     ;;
 
 "start")
@@ -91,8 +90,6 @@ case $CMD in
     ;;
 
 *)
-    kill_back
-    kill_front
     build_back
     build_front
     start_back

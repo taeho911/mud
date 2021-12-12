@@ -65,7 +65,7 @@ button:hover {
 
 input {
   font-size: calc(10px + 1vmin);
-  margin: 1vh 0;
+  margin: 1vh 1vw;
 }
 
 .err {
