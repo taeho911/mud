@@ -13,6 +13,6 @@ export DB_PASSWORD=${DB_PASSWORD:-""}
 export MUD_PEPPER=${MUD_PEPPER:-"_sudo_mud_PePPeP_"}
 
 # frontend envs
-export PORT=${PORT:-"80"}
+export PORT=${PORT:-"3000"}
 export API_DOMAIN=${API_DOMAIN:-"localhost"}
 export API_PORT=${API_PORT:-"8080"}

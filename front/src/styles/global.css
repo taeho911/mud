@@ -4,12 +4,17 @@
 }
 
 .nav {
+  display: flex;
   font-size: calc(10px + 1vmin);
   min-height: 6vh;
 }
 
 .nav > .nav-container {
-  padding-top: 1vh;
+  display: flex;
+  align-items: center;
+  float: left;
+  width: 90%
+  /* padding-top: 1vh; */
 }
 
 .nav > .nav-container > a {
@@ -20,6 +25,14 @@
 
 .nav > .nav-container > a:hover {
   color: #61dafb;
+}
+
+.nav > .user-container {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  float: right;
+  width: 10%;
 }
 
 .wrapper {

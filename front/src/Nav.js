@@ -6,6 +6,7 @@ import Sign from './components/Sign'
 import Account from './components/Account'
 import Money from './components/Money'
 import Test from './components/Test'
+import UserIcon from './components/UserIcon'
 
 function Nav() {
   const [user, setUser] = useContext(UserContext)
@@ -30,6 +31,9 @@ function Nav() {
             <Link to='money'>Money</Link>
           </>}
           <Link to='test'>Test</Link>
+        </div>
+        <div className='user-container'>
+          <UserIcon />
         </div>
       </nav>
       <div className='wrapper'>

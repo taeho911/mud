@@ -92,6 +92,10 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignConfirmHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeError(w, errors.INVALID_METHOD, "get method only", http.StatusBadRequest)
+		return
+	}
 	session, err := SessionManager.get(r)
 	if err != nil {
 		SessionManager.delete(w, r)
@@ -104,6 +108,38 @@ func SignConfirmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJson(w, model.User{Username: session.username}, http.StatusOK)
+}
+
+func SignOutHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeError(w, errors.INVALID_METHOD, "get method only", http.StatusBadRequest)
+		return
+	}
+	SessionManager.delete(w, r)
+	w.WriteHeader(http.StatusOK)
+}
+
+func SignDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	if r.Method != http.MethodDelete {
+		writeError(w, errors.INVALID_METHOD, "delete method only", http.StatusBadRequest)
+		return
+	}
+	var user model.User
+	if err := parseReqBody(r.Body, &user); err != nil {
+		writeError(w, errors.INVALID_REQUEST_BODY, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err := isCorrectPwd(ctx, user); err != nil {
+		writeError(w, errors.WRONG_USR_OR_PWD, err.Error(), http.StatusBadRequest)
+		return
+	}
+	SessionManager.delete(w, r)
+	if _, err := agent.UserDeleteByUsername(ctx, ctx.Value(usernameKey).(string)); err != nil {
+		writeError(w, errors.DELETE_USER_FAILED, "delete account failed", http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 // ----------------------------------------------------------

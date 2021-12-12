@@ -39,7 +39,16 @@ func UserDeleteByID(ctx context.Context, id primitive.ObjectID) (int, error) {
 	filter := bson.M{"_id": id}
 	result, err := deleteOne(USER_COLL, ctx, filter, nil)
 	if err != nil {
-		return int(result.DeletedCount), err
+		return 0, err
 	}
 	return int(result.DeletedCount), nil
+}
+
+func UserDeleteByUsername(ctx context.Context, username string) (int, error) {
+	filter := bson.M{"username": username}
+	result, err := deleteOne(USER_COLL, ctx, filter, nil)
+	if err != nil {
+		return 0, err
+	}
+	return int(result.DeletedCount), err
 }

@@ -1,0 +1,18 @@
+.user-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1vh;
+  margin-right: 1vw;
+  background-color: white;
+  border-radius: 50%;
+  color: #333;
+  width: 5vh;
+  height: 5vh;
+}
+
+.user-alphabet {
+  margin: 0;
+  padding: 0;
+  font-size: 4vh;
+}
