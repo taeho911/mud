@@ -32,9 +32,11 @@ function Nav() {
           </>}
           <Link to='test'>Test</Link>
         </div>
-        <div className='user-container'>
-          <UserIcon />
-        </div>
+        {user &&
+          <div className='user-container'>
+            <UserIcon />
+          </div>
+        }
       </nav>
       <div className='wrapper'>
         <Routes>

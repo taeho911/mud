@@ -43,3 +43,12 @@ func SaltDeleteByID(ctx context.Context, id primitive.ObjectID) (int, error) {
 	}
 	return int(result.DeletedCount), nil
 }
+
+func SaltDeleteByUsername(ctx context.Context, username string) (int, error) {
+	filter := bson.M{"username": username}
+	result, err := deleteOne(SALT_COLL, ctx, filter, nil)
+	if err != nil {
+		return 0, err
+	}
+	return int(result.DeletedCount), err
+}

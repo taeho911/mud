@@ -9,4 +9,5 @@ const (
 	CREATE_SESSION_FAILED string = "2003"
 	EXISTING_USERNAME     string = "2004"
 	DELETE_USER_FAILED    string = "2005"
+	DELETE_SALT_FAILED    string = "2006"
 )

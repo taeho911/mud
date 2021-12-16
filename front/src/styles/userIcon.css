@@ -6,13 +6,19 @@
   margin-right: 1vw;
   background-color: white;
   border-radius: 50%;
-  color: #333;
+  color: #282c34;
   width: 5vh;
   height: 5vh;
+  cursor: pointer;
 }
 
 .user-alphabet {
   margin: 0;
   padding: 0;
   font-size: 4vh;
+}
+
+.user-dropdown-menu {
+  right: 1vw;
+  margin-top: 0.5vh;
 }

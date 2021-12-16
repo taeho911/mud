@@ -135,8 +135,13 @@ func SignDeleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	SessionManager.delete(w, r)
-	if _, err := agent.UserDeleteByUsername(ctx, ctx.Value(usernameKey).(string)); err != nil {
+	username := ctx.Value(usernameKey).(string)
+	if _, err := agent.UserDeleteByUsername(ctx, username); err != nil {
 		writeError(w, errors.DELETE_USER_FAILED, "delete account failed", http.StatusBadRequest)
+		return
+	}
+	if _, err := agent.SaltDeleteByUsername(ctx, username); err != nil {
+		writeError(w, errors.DELETE_SALT_FAILED, "delete salt failed", http.StatusBadRequest)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

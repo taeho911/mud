@@ -8,7 +8,6 @@
   font-size: calc(10px + 1vmin);
   min-height: 6vh;
 }
-
 .nav > .nav-container {
   display: flex;
   align-items: center;
@@ -16,17 +15,14 @@
   width: 90%
   /* padding-top: 1vh; */
 }
-
 .nav > .nav-container > a {
   margin-left: calc(5px + 2vmin);
   color: white;
   text-decoration: none;
 }
-
 .nav > .nav-container > a:hover {
   color: #61dafb;
 }
-
 .nav > .user-container {
   display: flex;
   justify-content: right;
@@ -69,11 +65,10 @@ button {
   border-radius: 1em;
   transition-duration: 500ms;
 }
-
 button:hover {
   font-size: calc(15px + 1vmin);
   cursor: pointer;
-  background-color: #61dafb7e;
+  background-color: #9900ff;
 }
 
 input {
@@ -89,4 +84,93 @@ input {
 .succeed {
   font-size: calc(10px + 1vmin);
   color: greenyellow;
+}
+
+.dropdown-menu {
+  padding: 4px 0;
+  font-weight: 500;
+  background-color: white;
+  color: #282c34;
+  position: absolute;
+  z-index: 80;
+  /* border: solid 1px white; */
+  border-radius: 6px;
+}
+.dropdown-item {
+  font-size: calc(5px + 1vmin);
+  padding: 0.5vh 1vh;
+}
+.dropdown-action-item:hover {
+  color: white;
+  background-color: #9900ff;
+}
+.dropdown-action-item {
+  cursor: pointer;
+}
+.dropdown-divider {
+  display: block;
+  height: 0;
+  margin: 8px 0;
+  border-top: 1px solid #282c34;
+}
+
+.overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: black;
+  opacity: 0.3;
+  z-index: 90;
+}
+
+.alert-box,
+.prompt-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+.alert,
+.prompt {
+  /* display: flex;
+  flex-direction: column; */
+  padding: 20px;
+  font-size: calc(15px + 1vmin);
+  color: black;
+  background-color: white;
+  border-radius: 10px;
+  text-align: center;
+}
+.alert-msg,
+.prompt-msg {
+  align-self: stretch;
+}
+.alert > button,
+.prompt > button {
+  margin: 0;
+  margin-top: 2vh;
+  align-self: center;
+}
+
+.margintop1 {
+  margin-top: 1vh;
+}
+.margintop2 {
+  margin-top: 2vh;
+}
+.margintop3 {
+  margin-top: 3vh;
+}
+.margintop3 {
+  margin-top: 4vh;
 }

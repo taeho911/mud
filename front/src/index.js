@@ -2,15 +2,20 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import reportWebVitals from './reportWebVitals'
 import { UserProvider } from './context/UserContext'
+import { AlertProvider } from './context/AlertContext'
 import Nav from './Nav'
+import Alert from './components/Alert'
 import './styles/global.css'
 import './styles/index.css'
 
 ReactDOM.render(
   <div className='background'>
-    <UserProvider>
-      <Nav />
-    </UserProvider>
+    <AlertProvider>
+      <UserProvider>
+        <Nav />
+        <Alert />
+      </UserProvider>
+    </AlertProvider>
   </div>,
   document.getElementById('root')
 )

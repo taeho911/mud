@@ -21,7 +21,7 @@ function SignIn() {
       if (res.status === 200) {
         res.json().then(data => {
           setUser(data)
-          navigate('/', { replace: true })
+          navigate('/', {replace: true})
         })
       } else {
         res.text().then(err => setErr(err))

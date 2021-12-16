@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { AlertContext } from '../context/AlertContext'
 
 function SignUp(props) {
   const [err, setErr] = useState('')
+  const [alertMsg, setAlertMsg] = useContext(AlertContext)
 
   const signUp = e => {
     e.preventDefault()
@@ -25,7 +27,7 @@ function SignUp(props) {
       body: JSON.stringify(jsondata)
     }).then(res => {
       if (res.status === 200) {
-        alert('Sign up succeed')
+        setAlertMsg('Sign up succeed')
         props.setIsSignIn(true)
       } else {
         res.text().then(err => setErr(err))
