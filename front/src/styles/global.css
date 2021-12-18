@@ -63,7 +63,7 @@ button {
   border: 1px solid white;
   outline: none;
   border-radius: 1em;
-  transition-duration: 500ms;
+  transition-duration: 0.5s;
 }
 button:hover {
   font-size: calc(15px + 1vmin);

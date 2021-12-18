@@ -54,11 +54,11 @@ open_log_front() {
 }
 
 kill_back() {
-    kill `ps | grep 'mud$' | awk '{print $1}'` 2>&1 > /dev/null
+    kill -9 `ps | grep 'mud$' | awk '{print $1}'` 2>&1 > /dev/null
 }
 
 kill_front() {
-    kill `ps | grep 'node$' | awk '{print $1}'` 2>&1 > /dev/null
+    kill -9 `ps | grep 'node$' | awk '{print $1}'` 2>&1 > /dev/null
 }
 
 # ---------------------------------------------------

@@ -10,13 +10,13 @@ function SignIn() {
   const signIn = e => {
     e.preventDefault()
     setErr('')
-    let formData = new FormData(e.target.form)
-    let jsonData = Object.fromEntries(formData.entries())
+    let formdata = new FormData(e.target.form)
+    let jsondata = Object.fromEntries(formdata.entries())
 
     fetch('/api/sign/in', {
       method: 'post',
       headers: {'Content-type': 'application/json;charset=UTF-8'},
-      body: JSON.stringify(jsonData)
+      body: JSON.stringify(jsondata)
     }).then(res => {
       if (res.status === 200) {
         res.json().then(data => {
