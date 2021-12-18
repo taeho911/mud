@@ -1,0 +1,38 @@
+.tag-input {
+  width: 150px;
+}
+
+.tag {
+  display: inline-block;
+  color: black;
+  background-color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  padding: 1px 10px;
+  margin: 0 5px;
+  border-radius: 2em;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+}
+.tag:hover,
+.tag:focus {
+  color: white;
+  background-color: #9900ff;
+  border: none;
+}
+.tag::selection {
+  color: black;
+  background-color: white;
+}
+
+.selected-tag {
+  color: white;
+  background-color: #ff3e00;
+  border: none;
+}
+.selected-tag::selection {
+  color: white;
+  background-color: #ff3e00;
+}

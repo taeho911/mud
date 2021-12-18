@@ -82,6 +82,7 @@ func CreateIndexes() {
 	userCreateIndexes()
 	saltCreateIndexes()
 	accountCreateIndexes()
+	moneyCreateIndexes()
 }
 
 // 각 콜렉션별로 필요한 인덱스들을 모델에서 추출하여 작성한다.

@@ -95,6 +95,7 @@ input {
   z-index: 80;
   /* border: solid 1px white; */
   border-radius: 6px;
+  /* transform: translateY(-10px); */
 }
 .dropdown-item {
   font-size: calc(5px + 1vmin);
@@ -173,4 +174,8 @@ input {
 }
 .margintop3 {
   margin-top: 4vh;
+}
+
+input[type='number'] {
+  width: 150px;
 }
