@@ -67,6 +67,7 @@ func (sm *sessionManager) new(w http.ResponseWriter, r *http.Request, username s
 	http.SetCookie(w, &http.Cookie{
 		Name:  SESSION_KEY_COOKIE,
 		Value: key,
+		Path:  "/api",
 	})
 
 	return nil

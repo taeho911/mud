@@ -34,6 +34,9 @@ func MoneyFindByUsername(ctx context.Context, username string) ([]model.Money, e
 	if err := find(MONEY_COLL, &money, ctx, filter, option); err != nil {
 		return money, err
 	}
+	if len(money) == 0 {
+		money = make([]model.Money, 0)
+	}
 	return money, nil
 }
 
@@ -47,6 +50,9 @@ func MoneyFindByTagsIn(ctx context.Context, username string, tags []string) ([]m
 	if err := find(MONEY_COLL, &money, ctx, filter, option); err != nil {
 		return money, err
 	}
+	if len(money) == 0 {
+		money = make([]model.Money, 0)
+	}
 	return money, nil
 }
 
@@ -59,6 +65,9 @@ func MoneyFindByTagsAll(ctx context.Context, username string, tags []string) ([]
 	var money []model.Money
 	if err := find(MONEY_COLL, &money, ctx, filter, option); err != nil {
 		return money, err
+	}
+	if len(money) == 0 {
+		money = make([]model.Money, 0)
 	}
 	return money, nil
 }

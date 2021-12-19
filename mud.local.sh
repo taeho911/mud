@@ -5,7 +5,7 @@
 # ---------------------------------------------------
 CMD=$1
 ROOTDIR=`pwd`
-NOW=`date`
+NOW=`date +"%Y-%m-%d %H:%M:%S"`
 
 # ---------------------------------------------------
 # Functions
@@ -90,6 +90,8 @@ case $CMD in
     ;;
 
 *)
+    kill_back
+    kill_front
     build_back
     build_front
     start_back

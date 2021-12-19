@@ -2,7 +2,7 @@ import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 import { AlertContext } from '../context/AlertContext'
-import '../styles/userIcon.css'
+import '../styles/user-icon.css'
 
 function UserIcon() {
   const [promptMsg, setPromptMsg] = useState(undefined)
@@ -13,11 +13,15 @@ function UserIcon() {
   const signOut = e => {
     e.preventDefault()
     fetch('/api/sign/out').then(res => {
-      if (res.status === 200) {
+      switch (res.status) {
+      case 200:
+      case 401:
         setUser(undefined)
         navigate('/', {replace: true})
-      } else {
-        res.text().then(err => alert(err))
+        break
+      default:
+        res.text().then(err => setAlertMsg(err))
+        break
       }
     })
   }
@@ -30,15 +34,19 @@ function UserIcon() {
 
     fetch('/api/sign/delete', {
       method: 'delete',
-      headers: {'Content-type': 'application/json;charset=UTF-8'},
+      headers: {'Content-Type': 'application/json;charset=UTF-8'},
       body: JSON.stringify(jsondata)
     }).then(res => {
-      if (res.status === 200) {
+      switch (res.status) {
+      case 200:
+      case 401:
         setUser(undefined)
         setPromptMsg(undefined)
         navigate('/', {replace: true})
-      } else {
+        break
+      default:
         res.text().then(err => setAlertMsg(err))
+        break
       }
     })
   }

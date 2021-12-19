@@ -4,8 +4,8 @@
 
 .tag {
   display: inline-block;
-  color: black;
-  background-color: white;
+  color: white;
+  background-color: gray;
   font-size: 1rem;
   font-weight: 500;
   border: none;
@@ -24,8 +24,8 @@
   border: none;
 }
 .tag::selection {
-  color: black;
-  background-color: white;
+  color: white;
+  background-color: grey;
 }
 
 .selected-tag {
@@ -35,5 +35,35 @@
 }
 .selected-tag::selection {
   color: white;
+  background-color: #ff3e00;
+}
+
+.money-unit-container {
+  display: flex;
+  text-align: left;
+  border: solid 1px black;
+  margin: 2vh 0;
+  padding: 1vh 0;
+  font-size: calc(10px + 1vmin);
+}
+
+.col-date {
+  padding: 0 1vw;
+  width: 15%;
+}
+.col-amount {
+  padding: 0 1vw;
+  width: 15%;
+}
+.col-tags {
+  padding: 0 1vw;
+  width: 30%;
+}
+.col-summary {
+  padding: 0 1vw;
+  width: 40%;
+}
+
+.display-tag {
   background-color: #ff3e00;
 }

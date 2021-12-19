@@ -5,7 +5,7 @@ function Test(props) {
     let jsonData = Object.fromEntries(formData.entries())
     fetch('/api/test/session', {
       method: 'post',
-      headers: {'Content-type': 'application/jsoncharset=UTF-8'},
+      headers: {'Content-Type': 'application/jsoncharset=UTF-8'},
       body: JSON.stringify(jsonData)
     }).then(res => res.json()).then(data => {
       console.log(data)

@@ -14,10 +14,10 @@
 
 .sign-tab-active {
   margin: 0 4vw;
-  color: #61dafb;
+  color: #272829;
 }
 
 .sign-tab:hover {
   cursor: pointer;
-  color: #61dafb;
+  color: #ff3e00;
 }

@@ -23,14 +23,17 @@ function SignUp(props) {
 
     fetch('/api/sign/up', {
       method: 'post',
-      headers: {'Content-type': 'application/json;charset=UTF-8'},
+      headers: {'Content-Type': 'application/json;charset=UTF-8'},
       body: JSON.stringify(jsondata)
     }).then(res => {
-      if (res.status === 200) {
+      switch (res.status) {
+      case 200:
         setAlertMsg('Sign up succeed')
         props.setIsSignIn(true)
-      } else {
+        break
+      default:
         res.text().then(err => setErr(err))
+        break
       }
     })
   }

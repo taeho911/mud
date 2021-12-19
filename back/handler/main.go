@@ -33,6 +33,13 @@ func parseReqBody(body io.ReadCloser, object interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	// TODO: Change Unmarshal to Decode
+	// decoder := json.NewDecoder(body)
+	// if err := decoder.Decode(object); err != nil {
+	// 	return err
+	// }
+
 	if json.Unmarshal(marshalledBody, object); err != nil {
 		return err
 	}

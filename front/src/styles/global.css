@@ -1,6 +1,6 @@
 .background {
   min-height: 100vh;
-  background-color: #282c34;
+  background-color: white;
 }
 
 .nav {
@@ -17,11 +17,12 @@
 }
 .nav > .nav-container > a {
   margin-left: calc(5px + 2vmin);
-  color: white;
+  color: blcak;
+  font-weight: bold;
   text-decoration: none;
 }
 .nav > .nav-container > a:hover {
-  color: #61dafb;
+  color: #ff3e00;
 }
 .nav > .user-container {
   display: flex;
@@ -39,7 +40,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(15px + 1vmin);
-  color: white;
+  color: black;
 }
 
 main, .container {
@@ -47,11 +48,11 @@ main, .container {
 }
 
 .link {
-  color: #61dafb;
+  color: #ff3e00;
 }
 
 .active {
-  color: #61dafb;
+  color: #ff3e00;
 }
 
 button {
@@ -60,15 +61,16 @@ button {
   font-size: calc(10px + 1vmin);
   color: white;
   background-color: #333;
-  border: 1px solid white;
+  /* border: 1px solid white; */
+  border: none;
   outline: none;
   border-radius: 1em;
   transition-duration: 0.5s;
+  cursor: pointer;
 }
 button:hover {
   font-size: calc(15px + 1vmin);
-  cursor: pointer;
-  background-color: #9900ff;
+  background-color: #ff3e00;
 }
 
 input {
@@ -83,7 +85,7 @@ input {
 
 .succeed {
   font-size: calc(10px + 1vmin);
-  color: greenyellow;
+  color: #1ddb5c;
 }
 
 .dropdown-menu {
@@ -93,7 +95,7 @@ input {
   color: #282c34;
   position: absolute;
   z-index: 80;
-  /* border: solid 1px white; */
+  border: solid 1px black;
   border-radius: 6px;
   /* transform: translateY(-10px); */
 }
@@ -178,4 +180,9 @@ input {
 
 input[type='number'] {
   width: 150px;
+}
+
+::selection {
+  background: #ff3e00;
+  color: white;
 }
