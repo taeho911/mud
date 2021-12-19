@@ -17,7 +17,7 @@
 }
 .nav > .nav-container > a {
   margin-left: calc(5px + 2vmin);
-  color: blcak;
+  color: black;
   font-weight: bold;
   text-decoration: none;
 }
@@ -111,7 +111,7 @@ input {
   cursor: pointer;
 }
 .dropdown-divider {
-  display: block;
+  display: black;
   height: 0;
   margin: 8px 0;
   border-top: 1px solid #282c34;

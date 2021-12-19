@@ -73,10 +73,7 @@ case $CMD in
     ;;
 
 "start")
-    kill_back
-    kill_front
-    start_back
-    start_front
+    start_back && start_front
     ;;
 
 "log")
