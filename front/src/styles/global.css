@@ -69,7 +69,6 @@ button {
   cursor: pointer;
 }
 button:hover {
-  font-size: calc(15px + 1vmin);
   background-color: #ff3e00;
 }
 
@@ -185,4 +184,8 @@ input[type='number'] {
 ::selection {
   background: #ff3e00;
   color: white;
+}
+
+.display-none {
+  display: none;
 }

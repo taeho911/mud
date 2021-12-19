@@ -1,7 +1,3 @@
-.tag-input {
-  width: 150px;
-}
-
 .tag {
   display: inline-block;
   color: white;
@@ -41,29 +37,101 @@
 .money-unit-container {
   display: flex;
   text-align: left;
-  border: solid 1px black;
+  /* border: solid 1px black; */
   margin: 2vh 0;
-  padding: 1vh 0;
+  padding: 1vh 1vw;
   font-size: calc(10px + 1vmin);
+  font-weight: bold;
+  width: 800px;
+  min-width: 800px;
+}
+
+.money-unit-subcon-1 {
+  font-size: calc(15px + 1vmin);
+  display: flex;
+  flex: 0 0 90%;
+}
+.money-unit-subcon-2 {
+  padding-left: 0.5vw;
+  flex: 0 0 90%
 }
 
 .col-date {
   padding: 0 1vw;
-  width: 15%;
+  flex: 0 0 25%;
 }
 .col-amount {
   padding: 0 1vw;
-  width: 15%;
-}
-.col-tags {
-  padding: 0 1vw;
-  width: 30%;
+  flex: 0 0 25%;
 }
 .col-summary {
   padding: 0 1vw;
-  width: 40%;
+  flex: 0 0 50%;
+  flex-wrap: wrap;
 }
 
-.display-tag {
+/* .display-tag {
+  background-color: #303030;
+}
+.display-tag::selection {
+  color: white;
+  background-color: #303030;
+} */
+
+.add-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a73e8;
+  border-radius: 50%;
+  color: white;
+  width: 5vh;
+  height: 5vh;
+  cursor: pointer;
+  background-image: url('../media/plus_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 3vh;
+}
+
+.add-container {
+  border: solid 1px black;
+  background-color: white;
+  position: absolute;
+  margin-top: 6vh;
+  padding: 2vh;
+  border-radius: 6px;
+  width: 250px;
+}
+.add-container > div > button {
+  margin: 1vh 0.5vw;
+}
+.add-container > div > input {
+  width: 200px;
+}
+
+.add-icon-container {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.del-icon-container {
+  margin-left: auto;
+}
+
+.del-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #ff3e00;
+  border-radius: 50%;
+  color: white;
+  width: 3vh;
+  height: 3vh;
+  cursor: pointer;
+  background-image: url('../media/x_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1.5vh;
 }

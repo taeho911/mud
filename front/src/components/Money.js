@@ -9,6 +9,7 @@ function Money() {
   const [tags, setTags] = useState(['income', 'spend', 'invest', 'life', 'play', 'drink', 'food'])
   const [selectedTags, setSelectedTags] = useState([])
   const [moneyList, setMoneyList] = useState([])
+  const [addSwitch, setAddSwitch] = useState(false)
   const [err, setErr] = useState('')
   const tagInput = useRef(undefined)
   const navigate = useNavigate()
@@ -38,6 +39,9 @@ function Money() {
     if (tag.length > 0 && !tags.includes(tag)) {
       tags.push(tag)
       setTags([...tags])
+
+      selectedTags.push(tag)
+      setSelectedTags([...selectedTags])
       tagInput.current.value = ''
     }
   }
@@ -79,30 +83,33 @@ function Money() {
   return (
     <main>
       <h1>Money</h1>
-      <form>
-        <div>
-          <input type='date' name='date' placeholder='Date' />
-          <input type='number' step='100' name='amount' placeholder='Amount' />
-          <input type='text' name='summary' placeholder='Summary' />
-          <input ref={tagInput} className='tag-input' type='text' placeholder='Add custom tag' />
-          <button onClick={addTags}>Add Tag</button>
-          <button onClick={postMoney}>Submit</button>
-        </div>
-        <div>
-          {tags.map((tag, i) => {
-            return <span key={i} 
-              className={`tag ${selectedTags.includes(tag) ? 'selected-tag' : ''}`}
-              onClick={e => updateSelectedTags(tag)}
-              onDoubleClick={e => setTags(tags.filter(item => {return item !== tag}))}>{tag}</span>
-          })}
-        </div>
-        <div>
-          <div className='err margintop2'>{err}</div>
-          {moneyList.map((v, i) => {
-            return <MoneyUnit key={i} money={v} />
-          })}
-        </div>
-      </form>
+      <div className='add-icon-container'>
+        <div className='add-icon' onClick={e => setAddSwitch(!addSwitch)}></div>
+        <form className={`add-container ${addSwitch ? '' : 'display-none'}`}>
+          <div>
+            <input type='date' name='date' placeholder='Date' /><br />
+            <input type='number' step='100' name='amount' placeholder='Amount' /><br />
+            <input type='text' name='summary' placeholder='Summary' /><br />
+            <input ref={tagInput} type='text' placeholder='Add custom tag' /><br />
+            <button onClick={addTags}>Add Tag</button>
+            <button onClick={postMoney}>Submit</button>
+          </div>
+          <div>
+            {tags.map((tag, i) => {
+              return <span key={i} 
+                className={`tag ${selectedTags.includes(tag) ? 'selected-tag' : ''}`}
+                onClick={e => updateSelectedTags(tag)}
+                onDoubleClick={e => setTags(tags.filter(item => {return item !== tag}))}>{tag}</span>
+            })}
+          </div>
+        </form>
+      </div>
+      <div>
+        <div className='err margintop2'>{err}</div>
+        {moneyList.map((v, i) => {
+          return <MoneyUnit key={i} money={v} />
+        })}
+      </div>
     </main>
   )
 }

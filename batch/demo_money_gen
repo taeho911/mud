@@ -7,7 +7,11 @@ username = sys.argv[1]
 scale = int(sys.argv[2])
 tags_arrange = ['foo', 'bar', 'baz', 'kim', 'dev']
 filename = 'demo_money_insert.js'
-mongo_url = 'mongodb://127.0.0.1:27017/mud'
+db_username = os.getenv('DB_USERNAME')
+db_password = os.getenv('DB_PASSWORD')
+db_host = os.getenv('DB_HOST')
+db_port = os.getenv('DB_PORT')
+mongo_url = f'mongodb://{db_username}:{db_password}@{db_host}:{db_port}/mud?authSource=admin' if len(db_username) > 0 and len(db_password) > 0 else f'mongodb://{db_host}:{db_port}/mud'
 collname = 'money'
 
 def gen_date_str():
