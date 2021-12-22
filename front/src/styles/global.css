@@ -189,3 +189,10 @@ input[type='number'] {
 .display-none {
   display: none;
 }
+
+.color-red {
+  color: #ff3e00;
+}
+.color-blue {
+  color: #1a73e8;
+}

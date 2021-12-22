@@ -80,6 +80,13 @@ function Money() {
     })
   }
 
+  const deleteMoney = e => {
+    e.preventDefault()
+    let formdata = new FormData(e.target.form)
+    let jsondata = Object.fromEntries(formdata.entries())
+    console.log(`_id: ${jsondata._id}`)
+  }
+
   return (
     <main>
       <h1>Money</h1>
@@ -107,7 +114,7 @@ function Money() {
       <div>
         <div className='err margintop2'>{err}</div>
         {moneyList.map((v, i) => {
-          return <MoneyUnit key={i} money={v} />
+          return <MoneyUnit key={i} money={v} funcs={{deleteMoney: deleteMoney}}/>
         })}
       </div>
     </main>

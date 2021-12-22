@@ -36,38 +36,74 @@
 
 .money-unit-container {
   display: flex;
+  flex-direction: row;
   text-align: left;
-  /* border: solid 1px black; */
   margin: 2vh 0;
-  padding: 1vh 1vw;
+  padding: 0 1vw;
   font-size: calc(10px + 1vmin);
   font-weight: bold;
   width: 800px;
   min-width: 800px;
 }
+.money-unit-subcon-0 {
+  display: flex;
+  flex: 10;
+  flex-direction: column;
+}
+.icon-container {
+  display: flex;
+  flex: 0;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.del-icon {
+  background-color: #ff3e00;
+  border-radius: 50%;
+  color: white;
+  width: 3vh;
+  height: 3vh;
+  cursor: pointer;
+  background-image: url('../media/x_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1.5vh;
+}
+.mod-icon {
+  background-color: #ffd000;
+  border-radius: 50%;
+  color: white;
+  width: 3vh;
+  height: 3vh;
+  cursor: pointer;
+  background-image: url('../media/triangle_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1.5vh;
+}
 
 .money-unit-subcon-1 {
-  font-size: calc(15px + 1vmin);
   display: flex;
-  flex: 0 0 90%;
+  font-size: calc(15px + 1vmin);
+  flex-direction: row;
 }
 .money-unit-subcon-2 {
+  display: flex;
   padding-left: 0.5vw;
-  flex: 0 0 90%
 }
-
 .col-date {
+  display: flex;
   padding: 0 1vw;
-  flex: 0 0 25%;
+  flex: 1;
 }
 .col-amount {
+  display: flex;
   padding: 0 1vw;
-  flex: 0 0 25%;
+  flex: 1;
 }
 .col-summary {
+  display: flex;
   padding: 0 1vw;
-  flex: 0 0 50%;
-  flex-wrap: wrap;
+  flex: 2;
 }
 
 /* .display-tag {
@@ -114,24 +150,4 @@
   display: flex;
   justify-content: center;
   /* align-items: center; */
-}
-
-.del-icon-container {
-  margin-left: auto;
-}
-
-.del-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ff3e00;
-  border-radius: 50%;
-  color: white;
-  width: 3vh;
-  height: 3vh;
-  cursor: pointer;
-  background-image: url('../media/x_white.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 1.5vh;
 }
