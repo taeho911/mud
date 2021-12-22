@@ -21,10 +21,10 @@ function MoneyList(props) {
           </div>
         </div>
         <div className='icon-container'>
-          <div className='del-icon' onClick={props.funcs.deleteMoney}></div>
+          <div className='del-icon' onClick={e => props.funcs.deleteMoney(props.money._id)}></div>
           <div className='mod-icon' onClick={e => setDisplayFlag(!displayFlag)}></div>
         </div>
-        {displayFlag &&
+        {/* {displayFlag &&
           <MoneyForm
             date={props.money.date}
             amount={props.money.amount}
@@ -33,7 +33,7 @@ function MoneyList(props) {
             selectedTags={props.money.tags}
             funcs={{setDisplayFlag: setDisplayFlag}}
           />
-        }
+        } */}
       </div>
     </>
   )

@@ -43,6 +43,24 @@ func MoneyPostHandler(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, money, http.StatusOK)
 }
 
+func MoneyDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	if r.Method != http.MethodDelete {
+		writeError(w, errors.INVALID_METHOD, "delete method only", http.StatusBadRequest)
+		return
+	}
+	var money model.Money
+	if err := parseReqBody(r.Body, &money); err != nil {
+		writeError(w, errors.INVALID_REQUEST_BODY, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if _, err := agent.MoneyDeleteByID(ctx, money.ID); err != nil {
+		writeError(w, errors.DELETE_MONEY_FAILED, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 // ----------------------------------------------------------
 // Extra Functions
 // ----------------------------------------------------------

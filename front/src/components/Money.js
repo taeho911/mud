@@ -80,11 +80,25 @@ function Money() {
     })
   }
 
-  const deleteMoney = e => {
-    e.preventDefault()
-    let formdata = new FormData(e.target.form)
-    let jsondata = Object.fromEntries(formdata.entries())
-    console.log(`_id: ${jsondata._id}`)
+  const deleteMoney = _id => {
+    fetch('/api/money/delete', {
+      method: 'delete',
+      headers: {'Content-Type': 'application/json;charset=UTF-8'},
+      body: JSON.stringify({_id: _id})
+    }).then(res => {
+      switch (res.status) {
+        case 200:
+          fetchMoneyList()
+          break
+        case 401:
+          setUser(undefined)
+          navigate('/', {replace: true})
+          break
+        default:
+          res.text().then(err => setErr(err))
+          break
+        }
+    })
   }
 
   return (

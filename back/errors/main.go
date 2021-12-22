@@ -19,4 +19,5 @@ const (
 	FAILED_PUT           string = "1004"
 	FAILED_DELETE        string = "1005"
 	UNAUTHORIZED         string = "1006"
+	INVALID_QUERY        string = "1007"
 )
