@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import MoneyForm from './MoneyForm'
 
-function MoneyList(props) {
+function MoneyUnit(props) {
   const [displayFlag, setDisplayFlag] = useState(false)
 
   return (
@@ -22,7 +22,7 @@ function MoneyList(props) {
         </div>
         <div className='icon-container'>
           <div className='del-icon' onClick={e => props.funcs.deleteMoney(props.money._id)}></div>
-          <div className='mod-icon' onClick={e => setDisplayFlag(!displayFlag)}></div>
+          {/* <div className='mod-icon' onClick={e => setDisplayFlag(!displayFlag)}></div> */}
         </div>
         {/* {displayFlag &&
           <MoneyForm
@@ -39,4 +39,4 @@ function MoneyList(props) {
   )
 }
 
-export default MoneyList
+export default MoneyUnit

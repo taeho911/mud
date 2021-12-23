@@ -151,3 +151,32 @@
   justify-content: center;
   /* align-items: center; */
 }
+
+/* .money-tab-link {
+  cursor: pointer;
+  font-size: calc(15px + 1vmin);
+  font-weight: bold;
+  margin: 0 2vw;
+} */
+.money-tab-icon {
+  position: fixed;
+  right: 2vw;
+  bottom: 2vh;
+  background-color: black;
+  border-radius: 50%;
+  color: white;
+  width: 5vh;
+  height: 5vh;
+  cursor: pointer;
+  background-image: url('../media/graph_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 3vh;
+}
+.money-tab-icon-active {
+  background-color: #ff3e00;
+}
+
+.money-tab-container {
+  transition-duration: 1s;
+}

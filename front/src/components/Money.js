@@ -10,6 +10,7 @@ function Money() {
   const [selectedTags, setSelectedTags] = useState([])
   const [moneyList, setMoneyList] = useState([])
   const [addSwitch, setAddSwitch] = useState(false)
+  const [statSwitch, setStatSwitch] = useState(false)
   const [err, setErr] = useState('')
   const tagInput = useRef(undefined)
   const navigate = useNavigate()
@@ -88,7 +89,7 @@ function Money() {
     }).then(res => {
       switch (res.status) {
         case 200:
-          fetchMoneyList()
+          setMoneyList(moneyList.filter((v, i) => v._id != _id))
           break
         case 401:
           setUser(undefined)
@@ -118,16 +119,18 @@ function Money() {
           <div>
             {tags.map((tag, i) => {
               return <span key={i} 
-                className={`tag ${selectedTags.includes(tag) ? 'selected-tag' : ''}`}
-                onClick={e => updateSelectedTags(tag)}
-                onDoubleClick={e => setTags(tags.filter(item => {return item !== tag}))}>{tag}</span>
+              className={`tag ${selectedTags.includes(tag) ? 'selected-tag' : ''}`}
+              onClick={e => updateSelectedTags(tag)}
+              onDoubleClick={e => setTags(tags.filter(item => {return item !== tag}))}>{tag}</span>
             })}
           </div>
         </form>
       </div>
-      <div>
-        <div className='err margintop2'>{err}</div>
-        {moneyList.map((v, i) => {
+      <div className={`money-tab-icon ${statSwitch ? 'money-tab-icon-active' : ''}`}
+        onClick={e => setStatSwitch(!statSwitch)}></div>
+      <div className='err margintop2'>{err}</div>
+      <div className='money-tab-container'>
+        {!statSwitch && moneyList.map((v, i) => {
           return <MoneyUnit key={i} money={v} funcs={{deleteMoney: deleteMoney}}/>
         })}
       </div>
