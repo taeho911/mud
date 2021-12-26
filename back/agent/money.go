@@ -30,6 +30,7 @@ func MoneyInsertOne(ctx context.Context, money *model.Money) error {
 func MoneyFindByUsername(ctx context.Context, username string) ([]model.Money, error) {
 	filter := bson.M{"username": username}
 	option := options.Find().SetSort(bson.M{"date": -1})
+	// option := options.Find().SetSort(bson.M{"date": -1}).SetSkip(0).SetLimit(10)
 	var money []model.Money
 	if err := find(MONEY_COLL, &money, ctx, filter, option); err != nil {
 		return money, err
