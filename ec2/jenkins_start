@@ -1,0 +1,15 @@
+#!/bin/bash
+
+IMAGE=jenkins
+TAG=2.60.3
+NAME=jenkins
+MASTER_PORT=8080
+SLAVE_PORT=50000
+VOLUME=~/jenkins_home
+
+docker run -d --name ${NAME} \
+    -p ${MASTER_PORT}:8080 \
+    -p ${SLAVE_PORT}:50000 \
+    -v ${VOLUME}:/var/jenkins_home:rw \
+    --env JAVA_OPTS="-Dhudson.model.DownloadService.noSignatureCheck=true" \
+    ${IMAGE}:${TAG}

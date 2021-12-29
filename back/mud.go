@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	DEFAULT_PORT    string        = "8080"
+	DEFAULT_PORT    string        = "9011"
 	SES_GC_INTERVAL time.Duration = 3 * time.Minute
 	SES_GC_PERCENT  float64       = float64(50)
 )

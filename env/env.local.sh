@@ -15,8 +15,8 @@ export MUD_PEPPER=${MUD_PEPPER:-"_sudo_mud_PePPeP_"}
 # frontend envs
 export PORT=${PORT:-"3000"}
 export API_DOMAIN=${API_DOMAIN:-"localhost"}
-export API_PORT=${API_PORT:-"8080"}
+export API_PORT=${API_PORT:-"9011"}
 
 # analyzer envs
 export ANAL_HOST=${ANAL_HOST:-"127.0.0.1"}
-export ANAL_PORT-${ANAL_PORT:-"8081"}
+export ANAL_PORT-${ANAL_PORT:-"9012"}
