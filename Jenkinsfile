@@ -8,8 +8,6 @@ pipeline {
         git --version
         docker version
         go version
-        node -v
-        npm -v
         python3 --version
         '''
       }
