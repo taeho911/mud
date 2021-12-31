@@ -5,6 +5,7 @@ pipeline {
     stage('Check Tools') {
       steps {
         sh '''
+        id
         git --version
         docker version
         go version
