@@ -7,3 +7,4 @@ sudo amazon-linux-extras install epel
 sudo yum install epel-release
 sudo yum install jenkins
 sudo systemctl start jenkins
+sudo gpasswd -a jenkins docker

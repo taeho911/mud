@@ -5,57 +5,49 @@ services:
       context: ./back
       dockerfile: dockerfile
       args:
-        - BASE_IMAGE=${BASE_IMAGE_BACK}
-        - BASE_TAG=${BASE_TAG_BACK}
-        - COPY_DIR=backend
-        - COMMAND=${COMMAND_BACK}
-        - CONTAINER_NAME=${CONTAINER_NAME_BACK}
-    image: ${IMAGE_BACK}:${TAG_BACK}
-    depends_on:
-      - database
-    container_name: ${CONTAINER_NAME_BACK}
+        - BACK_BASE_IMAGE=${BACK_BASE_IMAGE}
+        - BACK_BASE_TAG=${BACK_BASE_TAG}
+    image: ${BACK_IMAGE}:${BACK_TAG}
+    container_name: ${BACK_CONTAINER_NAME}
     environment:
-      - PORT=${PORT_BACK}
-      - NODE_ENV
-      - MONGO_HOST=${CONTAINER_NAME_DB}
-      - MONGO_PORT=27017
-      - TARGET_DB
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MUD_PEPPER=${MUD_PEPPER}
+      - ANAL_HOST=${ANAL_HOST}
+      - ANAL_PORT=${ANAL_PORT}
     networks:
       - mud
     volumes:
-      - ${LOG_VOLUME_BACK}:/mnt/logs:rw
+      - ${BACK_LOG}:/mnt/logs:rw
     deploy:
       resources:
         limits:
-          cpus: ${CPU_LIMIT_BACK}
-          memory: ${MEM_LIMIT_BACK}
+          cpus: ${BACK_CPU_LIMIT}
+          memory: ${BACK_MEM_LIMIT}
         reservations:
-          cpus: ${CPU_RESERV_BACK}
-          memory: ${MEM_RESERV_BACK}
+          cpus: ${BACK_CPU_RESERV}
+          memory: ${BACK_MEM_RESERV}
       restart_policy:
         condition: on-failure
         delay: 3s
         max_attempts: 3
         window: 30s
-    secrets:
-      - mongo_username
-      - mongo_password
 
   frontend:
     build:
       context: ./front
       dockerfile: dockerfile
       args:
-        - BASE_IMAGE=${BASE_IMAGE_FRONT}
-        - BASE_TAG=${BASE_TAG_FRONT}
-        - COPY_DIR=frontend
-        - COMMAND=${COMMAND_FRONT}
-        - CONTAINER_NAME=${CONTAINER_NAME_FRONT}
-    image: ${IMAGE_FRONT}:${TAG_FRONT}
-    container_name: ${CONTAINER_NAME_FRONT}
+        - FRONT_BASE_IMAGE=${FRONT_BASE_IMAGE}
+        - FRONT_BASE_TAG=${FRONT_BASE_TAG}
+    image: ${FRONT_IMAGE}:${FRONT_TAG}
+    container_name: ${FRONT_CONTAINER_NAME}
     environment:
-      - PORT=${PORT_FRONT}
-      - REACT_APP_BACKEND_URL=http://${DOMAIN}:${PORT_PROXY}/api
+      - PORT=${FRONT_PORT}
+      - API_DOMAIN=${API_DOMAIN}
+      - API_PORT=${API_PORT}
     networks:
       - mud
     volumes:
@@ -63,11 +55,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${CPU_LIMIT_FRONT}
-          memory: ${MEM_LIMIT_FRONT}
+          cpus: ${FRONT_CPU_LIMIT}
+          memory: ${FRONT_MEM_LIMIT}
         reservations:
-          cpus: ${CPU_RESERV_FRONT}
-          memory: ${MEM_RESERV_FRONT}
+          cpus: ${FRONT_CPU_RESERV}
+          memory: ${FRONT_MEM_RESERV}
       restart_policy:
         condition: on-failure
         delay: 3s
@@ -81,9 +73,3 @@ networks:
       driver: default
       config:
         - subnet: 172.18.1.0/24
-
-secrets:
-  mongo_username:
-    file: ./secrets/mongo_username
-  mongo_password:
-    file: ./secrets/mongo_password
