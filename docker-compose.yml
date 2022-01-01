@@ -4,9 +4,16 @@ services:
     build:
       context: ./back
       dockerfile: dockerfile
+      target: prod
       args:
         - BACK_BASE_IMAGE=${BACK_BASE_IMAGE}
         - BACK_BASE_TAG=${BACK_BASE_TAG}
+        - DB_HOST=${DB_HOST}
+        - DB_PORT=${DB_PORT}
+        - DB_USERNAME=${DB_USERNAME}
+        - DB_PASSWORD=${DB_PASSWORD}
+        - CONTAINER_NAME=${BACK_CONTAINER_NAME}
+        - COMMAND=${BACK_CMD}
     image: ${BACK_IMAGE}:${BACK_TAG}
     container_name: ${BACK_CONTAINER_NAME}
     environment:
@@ -20,7 +27,7 @@ services:
     networks:
       - mud
     volumes:
-      - ${BACK_LOG}:/mnt/logs:rw
+      - ${LOG_PATH}:/mnt/logs:rw
     deploy:
       resources:
         limits:
@@ -42,6 +49,8 @@ services:
       args:
         - FRONT_BASE_IMAGE=${FRONT_BASE_IMAGE}
         - FRONT_BASE_TAG=${FRONT_BASE_TAG}
+        - CONTAINER_NAME=${FRONT_CONTAINER_NAME}
+        - COMMAND=${FRONT_CMD}
     image: ${FRONT_IMAGE}:${FRONT_TAG}
     container_name: ${FRONT_CONTAINER_NAME}
     environment:
@@ -51,7 +60,7 @@ services:
     networks:
       - mud
     volumes:
-      - ${LOG_VOLUME_FRONT}:/mnt/logs:rw
+      - ${LOG_PATH}:/mnt/logs:rw
     deploy:
       resources:
         limits:
@@ -72,4 +81,5 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.18.1.0/24
+        - subnet: ${SUBNET}
+          gateway: ${GATEWAY}

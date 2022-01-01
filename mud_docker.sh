@@ -11,42 +11,24 @@ NOW=`date +"%Y-%m-%d %H:%M:%S"`
 # Functions
 # ---------------------------------------------------
 setenv() {
-    source $ROOTDIR/env/env.docker.sh
+    source ${ROOTDIR}/env/env.docker.sh
 }
 
-build_back() {
-    cd $ROOTDIR/back
-    echo "--- BACK ${NOW} ---" >> $ROOTDIR/$BUILD_LOG
-    go install 2>&1 >> $ROOTDIR/$BUILD_LOG &
+back_test() {
+    docker build --target test -t ${BACK_IMAGE}_test:${BACK_TAG} ${ROOTDIR}/back
+    docker run -it --rm ${BACK_IMAGE}_test:${BACK_TAG}
 }
 
-build_front() {
-    cd $ROOTDIR/front
-    npm_install
-    echo "--- FRONT ${NOW} ---" >> $ROOTDIR/$BUILD_LOG
-    npm run build 2>&1 >> $ROOTDIR/$BUILD_LOG &
+build() {
+    docker-compose build
 }
 
-start_back() {
-    mkdir -p $ROOTDIR/logs
-    echo "--- START ${NOW} ---" >> $ROOTDIR/$BACK_LOG
-    mud 2>&1 >> $ROOTDIR/$BACK_LOG &
+up() {
+    docker-compose up
 }
 
-start_front() {
-    cd $ROOTDIR/front
-    npm_install
-    mkdir -p $ROOTDIR/logs
-    echo "--- START ${NOW} ---" >> $ROOTDIR/$BACK_LOG
-    npm start 2>&1 >> $ROOTDIR/$FRONT_LOG &
-}
-
-kill_back() {
-    kill -9 `ps | grep 'mud$' | awk '{print $1}'` 2>&1 > /dev/null
-}
-
-kill_front() {
-    kill -9 `ps | grep 'node$' | awk '{print $1}'` 2>&1 > /dev/null
+down() {
+    docker-compose down
 }
 
 # ---------------------------------------------------
@@ -56,26 +38,23 @@ setenv
 
 case $CMD in
 
+"test")
+    back_test
+    ;;
+
 "build")
-    build_back && build_front
+    build
     ;;
 
-"start")
-    start_back && start_front
+"up")
+    up
     ;;
 
-"kill")
-    kill_back
-    kill_front
+"down")
+    down
     ;;
 
 *)
-    kill_back
-    kill_front
-    build_back
-    build_front
-    start_back
-    start_front
     ;;
 
 esac

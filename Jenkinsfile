@@ -6,6 +6,7 @@ pipeline {
       steps {
         sh '''
         id
+        pwd
         git --version
         docker version
         go version
@@ -14,21 +15,21 @@ pipeline {
       }
     }
 
-    stage('Build') {
+    stage('Test') {
       steps {
-        echo 'Hello World'
+        sh './mud_docker.sh test'
       }
     }
 
-    stage('Test') {
+    stage('Docker Build') {
       steps {
-        echo 'Hello World'
+        sh './mud_docker.sh build'
       }
     }
 
     stage('Deploy') {
       steps {
-        echo 'Hello World'
+        sh './mud_docker.sh up'
       }
     }
   }
