@@ -53,13 +53,7 @@ func TestValidatePassword(t *testing.T) {
 			Password: "passwordovermaximumlength",
 		},
 		{
-			Password: "nocaptal1@",
-		},
-		{
 			Password: "noNumber%",
-		},
-		{
-			Password: "noSimbol111",
 		},
 	}
 
