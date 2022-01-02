@@ -13,6 +13,12 @@ pipeline {
       }
     }
 
+    stage('Pre Work') {
+      steps {
+        sh 'chmod +x ./mud_docker.sh'
+      }
+    }
+
     stage('Test') {
       steps {
         sh './mud_docker.sh test'
