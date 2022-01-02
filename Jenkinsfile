@@ -9,8 +9,6 @@ pipeline {
         pwd
         git --version
         docker version
-        go version
-        python3 --version
         '''
       }
     }
