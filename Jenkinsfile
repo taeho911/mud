@@ -9,7 +9,6 @@ pipeline {
         pwd
         git --version
         docker version
-        echo ${PATH} | sed 's/:/:\\n/g'
         '''
       }
     }
@@ -20,10 +19,10 @@ pipeline {
         set +x; source ./env/env.docker.sh; set -x
         export BACK_TARGET=test
         export BACK_IMAGE=${BACK_IMAGE}_test
-        echo ${BACK_TARGET}
-        echo ${BACK_IMAGE}
         docker-compose build backend
-        docker-compose up database backend
+        docker-compose run -d database
+        docker-compose run backend
+        docker-compose down || true
         '''
       }
     }
@@ -32,8 +31,6 @@ pipeline {
       steps {
         sh '''
         set +x; source ./env/env.docker.sh; set -x
-        echo ${BACK_TARGET}
-        echo ${BACK_IMAGE}
         docker-compose build
         '''
       }
