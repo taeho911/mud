@@ -4,7 +4,7 @@ services:
     build:
       context: ./back
       dockerfile: dockerfile
-      target: prod
+      target: ${BACK_TARGET}
       args:
         - BACK_BASE_IMAGE=${BACK_BASE_IMAGE}
         - BACK_BASE_TAG=${BACK_BASE_TAG}

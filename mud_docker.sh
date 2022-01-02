@@ -15,8 +15,10 @@ setenv() {
 }
 
 back_test() {
-    docker build --target test -t ${BACK_IMAGE}_test:${BACK_TAG} ${ROOTDIR}/back
-    docker run -it --rm ${BACK_IMAGE}_test:${BACK_TAG}
+    export BACK_TARGET=test
+    export BACK_IMAGE=${BACK_IMAGE}_test
+    docker-compose build backend
+    docker run -it --rm ${BACK_IMAGE}:${BACK_TAG}
 }
 
 build() {

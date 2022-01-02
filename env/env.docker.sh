@@ -24,6 +24,7 @@ export BACK_BASE_TAG=${BACK_TAG:-"1.17-alpine3.14"}
 export BACK_IMAGE=${BACK_IMAGE:-"mud_back"}
 export BACK_TAG=${BACK_TAG:-"latest"}
 export BACK_CMD=${BACK_CMD:-"mud"}
+export BACK_TARGET=${BACK_TARGET:-"prod"}
 
 export DB_HOST=${GATEWAY}
 export DB_PORT=${DB_PORT:-"27017"}
