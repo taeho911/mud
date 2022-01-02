@@ -16,8 +16,8 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'source ./env/env.docker.sh'
-        withEnv(['BACK_TARGET=test', 'BACK_IMAGE=${BACK_IMAGE}_test']) {
+        sh 'set +x; source ./env/env.docker.sh'
+        withEnv(['BACK_TARGET=test', "BACK_IMAGE=${env.BACK_IMAGE}_test"]) {
           sh '''
           echo ${BACK_TARGET}
           echo ${BACK_IMAGE}
