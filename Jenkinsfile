@@ -2,13 +2,14 @@ pipeline {
   agent any
 
   stages {
-    stage('Check Tools') {
+    stage('Pre Check') {
       steps {
         sh '''
         id
         pwd
         git --version
         docker version
+        echo ${PATH} | sed 's/:/:\n/g'
         '''
       }
     }
