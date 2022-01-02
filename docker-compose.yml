@@ -29,6 +29,8 @@ services:
         - CONTAINER_NAME=${BACK_CONTAINER_NAME}
         - COMMAND=${BACK_CMD}
     image: ${BACK_IMAGE}:${BACK_TAG}
+    depends_on:
+      - database
     container_name: ${BACK_CONTAINER_NAME}
     environment:
       - API_PORT=${API_PORT}
