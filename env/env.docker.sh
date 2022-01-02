@@ -8,14 +8,14 @@ export GATEWAY=${GATEWAY:-"172.18.1.1"}
 export LOG_PATH=${LOG_PATH:-"~/mud/logs"}
 
 # resources
-export BACK_CPU_LIMIT=
-export BACK_MEM_LIMIT=
-export BACK_CPU_RESERV=
-export BACK_MEM_RESERV=
-export FRONT_CPU_LIMIT=
-export FRONT_MEM_LIMIT=
-export FRONT_CPU_RESERV=
-export FRONT_MEM_RESERV=
+# export BACK_CPU_LIMIT=
+# export BACK_MEM_LIMIT=
+# export BACK_CPU_RESERV=
+# export BACK_MEM_RESERV=
+# export FRONT_CPU_LIMIT=
+# export FRONT_MEM_LIMIT=
+# export FRONT_CPU_RESERV=
+# export FRONT_MEM_RESERV=
 
 # backend envs
 export BACK_CONTAINER_NAME=${BACK_CONTAINER_NAME:-"mud_back"}

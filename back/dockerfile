@@ -2,6 +2,8 @@ ARG BASE_IMAGE
 ARG BASE_TAG
 FROM ${BASE_IMAGE}:${BASE_TAG} as base
 
+WORKDIR /go/src/mud
+COPY . .
 ARG CONTAINER_NAME
 ARG COMMAND
 ENV CONTAINER_NAME=${CONTAINER_NAME}
@@ -21,9 +23,6 @@ ENV MUD_PEPPER=${MUD_PEPPER}
 CMD sh -c "go test ./..."
 
 FROM base as prod
-WORKDIR /app
-COPY . .
-RUN go install
+RUN go install && rm -fr *
 VOLUME /mnt/logs
-
 CMD sh -c "${COMMAND} 2>&1 | tee -a /mnt/logs/${CONTAINER_NAME}.log"
