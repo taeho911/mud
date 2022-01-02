@@ -8,7 +8,8 @@ ARG CONTAINER_NAME
 ARG COMMAND
 ENV CONTAINER_NAME=${CONTAINER_NAME}
 ENV COMMAND=${COMMAND}
-RUN go install
+RUN apk add --no-cache build-base \
+    && go install
 
 FROM base as test
 ARG DB_HOST
