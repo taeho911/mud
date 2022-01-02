@@ -9,7 +9,7 @@ pipeline {
         pwd
         git --version
         docker version
-        echo ${PATH} | sed 's/:/:\n/g'
+        echo ${PATH} | sed 's/:/:\\n/g'
         '''
       }
     }
