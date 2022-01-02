@@ -6,8 +6,8 @@ services:
       dockerfile: dockerfile
       target: ${BACK_TARGET}
       args:
-        - BACK_BASE_IMAGE=${BACK_BASE_IMAGE}
-        - BACK_BASE_TAG=${BACK_BASE_TAG}
+        - BASE_IMAGE=${BACK_BASE_IMAGE}
+        - BASE_TAG=${BACK_BASE_TAG}
         - DB_HOST=${DB_HOST}
         - DB_PORT=${DB_PORT}
         - DB_USERNAME=${DB_USERNAME}
@@ -47,8 +47,8 @@ services:
       context: ./front
       dockerfile: dockerfile
       args:
-        - FRONT_BASE_IMAGE=${FRONT_BASE_IMAGE}
-        - FRONT_BASE_TAG=${FRONT_BASE_TAG}
+        - BASE_IMAGE=${FRONT_BASE_IMAGE}
+        - BASE_TAG=${FRONT_BASE_TAG}
         - CONTAINER_NAME=${FRONT_CONTAINER_NAME}
         - COMMAND=${FRONT_CMD}
     image: ${FRONT_IMAGE}:${FRONT_TAG}
