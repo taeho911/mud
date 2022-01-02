@@ -17,7 +17,7 @@ pipeline {
     stage('Test') {
       steps {
         sh '''
-        set +x; source ./env/env.docker.sh
+        set +x; source ./env/env.docker.sh; set-x
         export BACK_TARGET=test
         export BACK_IMAGE=${BACK_IMAGE}_test
         echo ${BACK_TARGET}
@@ -31,7 +31,7 @@ pipeline {
     stage('Docker Build') {
       steps {
         sh '''
-        source ./env/env.docker.sh
+        set +x; source ./env/env.docker.sh; set-x
         echo ${BACK_TARGET}
         echo ${BACK_IMAGE}
         '''
@@ -41,7 +41,7 @@ pipeline {
     stage('Deploy') {
       steps {
         sh '''
-        source ./env/env.docker.sh
+        set +x; source ./env/env.docker.sh; set-x
         '''
       }
     }

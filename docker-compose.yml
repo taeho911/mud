@@ -29,13 +29,13 @@ services:
     volumes:
       - ${LOG_PATH}:/mnt/logs:rw
     deploy:
-      resources:
-        limits:
-          cpus: ${BACK_CPU_LIMIT}
-          memory: ${BACK_MEM_LIMIT}
-        reservations:
-          cpus: ${BACK_CPU_RESERV}
-          memory: ${BACK_MEM_RESERV}
+      # resources:
+      #   limits:
+      #     cpus: ${BACK_CPU_LIMIT}
+      #     memory: ${BACK_MEM_LIMIT}
+      #   reservations:
+      #     cpus: ${BACK_CPU_RESERV}
+      #     memory: ${BACK_MEM_RESERV}
       restart_policy:
         condition: on-failure
         delay: 3s
@@ -62,13 +62,13 @@ services:
     volumes:
       - ${LOG_PATH}:/mnt/logs:rw
     deploy:
-      resources:
-        limits:
-          cpus: ${FRONT_CPU_LIMIT}
-          memory: ${FRONT_MEM_LIMIT}
-        reservations:
-          cpus: ${FRONT_CPU_RESERV}
-          memory: ${FRONT_MEM_RESERV}
+      # resources:
+      #   limits:
+      #     cpus: ${FRONT_CPU_LIMIT}
+      #     memory: ${FRONT_MEM_LIMIT}
+      #   reservations:
+      #     cpus: ${FRONT_CPU_RESERV}
+      #     memory: ${FRONT_MEM_RESERV}
       restart_policy:
         condition: on-failure
         delay: 3s
