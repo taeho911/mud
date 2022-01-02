@@ -14,27 +14,33 @@ pipeline {
       }
     }
 
-    stage('Pre Work') {
-      steps {
-        sh 'chmod +x ./mud_docker.sh'
-      }
-    }
-
     stage('Test') {
       steps {
-        sh './mud_docker.sh test'
+        sh 'source ./env/env.docker.sh'
+        withEnv(['BACK_TARGET=test', 'BACK_IMAGE=${BACK_IMAGE}_test']) {
+          sh '''
+          echo ${BACK_TARGET}
+          echo ${BACK_IMAGE}
+          docker-compose build backend
+          docker run ${BACK_IMAGE}:${BACK_TAG}
+          '''
+        }
       }
     }
 
     stage('Docker Build') {
       steps {
-        sh './mud_docker.sh build'
+        sh '''
+        source ./env/env.docker.sh
+        '''
       }
     }
 
     stage('Deploy') {
       steps {
-        sh './mud_docker.sh up'
+        sh '''
+        source ./env/env.docker.sh
+        '''
       }
     }
   }
