@@ -16,15 +16,15 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'set +x; source ./env/env.docker.sh'
-        withEnv(['BACK_TARGET=test', "BACK_IMAGE=${env.BACK_IMAGE}_test"]) {
-          sh '''
-          echo ${BACK_TARGET}
-          echo ${BACK_IMAGE}
-          docker-compose build backend
-          docker run ${BACK_IMAGE}:${BACK_TAG}
-          '''
-        }
+        sh '''
+        set +x; source ./env/env.docker.sh
+        export BACK_TARGET=test
+        export BACK_IMAGE=${BACK_IMAGE}_test
+        echo ${BACK_TARGET}
+        echo ${BACK_IMAGE}
+        docker-compose build backend
+        docker run ${BACK_IMAGE}:${BACK_TAG}
+        '''
       }
     }
 
@@ -32,6 +32,8 @@ pipeline {
       steps {
         sh '''
         source ./env/env.docker.sh
+        echo ${BACK_TARGET}
+        echo ${BACK_IMAGE}
         '''
       }
     }
