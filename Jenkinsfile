@@ -34,6 +34,7 @@ pipeline {
         set +x; source ./env/env.docker.sh; set -x
         echo ${BACK_TARGET}
         echo ${BACK_IMAGE}
+        docker-compose build
         '''
       }
     }
@@ -42,6 +43,8 @@ pipeline {
       steps {
         sh '''
         set +x; source ./env/env.docker.sh; set -x
+        docker-compose down || true
+        docker-compose up
         '''
       }
     }
