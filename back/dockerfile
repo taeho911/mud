@@ -8,6 +8,7 @@ ARG CONTAINER_NAME
 ARG COMMAND
 ENV CONTAINER_NAME=${CONTAINER_NAME}
 ENV COMMAND=${COMMAND}
+RUN go install
 
 FROM base as test
 ARG DB_HOST
@@ -23,6 +24,6 @@ ENV MUD_PEPPER=${MUD_PEPPER}
 CMD sh -c "go test ./..."
 
 FROM base as prod
-RUN go install && rm -fr *
+RUN rm -fr *
 VOLUME /mnt/logs
 CMD sh -c "${COMMAND} 2>&1 | tee -a /mnt/logs/${CONTAINER_NAME}.log"

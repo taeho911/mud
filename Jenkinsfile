@@ -23,7 +23,6 @@ pipeline {
         echo ${BACK_TARGET}
         echo ${BACK_IMAGE}
         docker-compose build backend
-        docker run ${BACK_IMAGE}:${BACK_TAG}
         '''
       }
     }
