@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # host
-export SUBNET=${SUBNET:-"172.18.1.0/24"}
-export GATEWAY=${GATEWAY:-"172.18.1.1"}
+# export SUBNET=${SUBNET:-"172.18.1.0/24"}
+# export GATEWAY=${GATEWAY:-"172.18.1.1"}
 
 # log envs
 export LOG_PATH=${LOG_PATH:-"~/mud/logs"}
@@ -17,6 +17,12 @@ export LOG_PATH=${LOG_PATH:-"~/mud/logs"}
 # export FRONT_CPU_RESERV=
 # export FRONT_MEM_RESERV=
 
+# database envc
+export DB_CONTAINER_NAME=${DB_CONTAINER_NAME:-"mud_db"}
+export DB_IMAGE=${DB_IMAGE:-"mongo"}
+export DB_TAG=${DB_TAG:-"4.4.11-focal"}
+export DB_DATA_PATH=${DB_DATA_PATH:-"/data/db"}
+
 # backend envs
 export BACK_CONTAINER_NAME=${BACK_CONTAINER_NAME:-"mud_back"}
 export BACK_BASE_IMAGE=${BACK_IMAGE:-"golang"}
@@ -26,7 +32,7 @@ export BACK_TAG=${BACK_TAG:-"latest"}
 export BACK_CMD=${BACK_CMD:-"mud"}
 export BACK_TARGET=${BACK_TARGET:-"prod"}
 
-export DB_HOST=${GATEWAY}
+export DB_HOST=${DB_CONTAINER_NAME}
 export DB_PORT=${DB_PORT:-"27017"}
 export DB_USERNAME=${DB_USERNAME:-""}
 export DB_PASSWORD=${DB_PASSWORD:-""}

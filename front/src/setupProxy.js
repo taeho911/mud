@@ -1,7 +1,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const API_DOMAIN = process.env.API_DOMAIN || 'localhost'
-const API_PORT = process.env.API_PORT || '8080'
+const API_PORT = process.env.API_PORT || '9011'
 
 module.exports = function(app) {
   app.use(

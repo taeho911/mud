@@ -1,5 +1,19 @@
 version: "3.9"
 services:
+  database:
+    image: ${DB_IMAGE}:${DB_TAG}
+    container_name: ${DB_CONTAINER_NAME}
+    networks:
+      - database
+    volumes:
+      - ${DB_DATA_PATH}:/data/db:rw
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 3
+        window: 30s
+
   backend:
     build:
       context: ./back
@@ -17,6 +31,7 @@ services:
     image: ${BACK_IMAGE}:${BACK_TAG}
     container_name: ${BACK_CONTAINER_NAME}
     environment:
+      - API_PORT=${API_PORT}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_USERNAME=${DB_USERNAME}
@@ -25,7 +40,8 @@ services:
       - ANAL_HOST=${ANAL_HOST}
       - ANAL_PORT=${ANAL_PORT}
     networks:
-      - mud
+      - database
+      - application
     volumes:
       - ${LOG_PATH}:/mnt/logs:rw
     deploy:
@@ -58,7 +74,7 @@ services:
       - API_DOMAIN=${API_DOMAIN}
       - API_PORT=${API_PORT}
     networks:
-      - mud
+      - application
     ports:
       - ${FRONT_PORT}:${FRONT_PORT}
     volumes:
@@ -78,10 +94,15 @@ services:
         window: 30s
 
 networks:
-  mud:
+  database:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: ${SUBNET}
-          gateway: ${GATEWAY}
+        - subnet: 172.18.1.0/24
+  application:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.2.0/24

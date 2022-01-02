@@ -44,7 +44,7 @@ pipeline {
         sh '''
         set +x; source ./env/env.docker.sh; set -x
         docker-compose down || true
-        docker-compose up
+        docker-compose up -d
         '''
       }
     }
