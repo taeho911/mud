@@ -53,4 +53,4 @@ export API_PORT=${API_PORT:-"9011"}
 # analyzer envs
 export ANAL_CONTAINER_NAME=${ANAL_CONTAINER_NAME:-"mud_analyzer"}
 export ANAL_HOST=${ANAL_CONTAINER_NAME}
-export ANAL_PORT=${ANAL_PORT:-"9012"}
+export ANAL_PORT=${ANAL_PORT:-"19011"}

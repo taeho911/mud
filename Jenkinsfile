@@ -20,7 +20,7 @@ pipeline {
         export BACK_TARGET=test
         export BACK_IMAGE=${BACK_IMAGE}_test
         docker-compose build backend
-        docker-compose run -d database
+        docker-compose up -d database
         docker-compose run backend
         docker-compose down || true
         '''

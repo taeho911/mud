@@ -19,4 +19,4 @@ export API_PORT=${API_PORT:-"9011"}
 
 # analyzer envs
 export ANAL_HOST=${ANAL_HOST:-"127.0.0.1"}
-export ANAL_PORT-${ANAL_PORT:-"9012"}
+export ANAL_PORT-${ANAL_PORT:-"19011"}

@@ -23,12 +23,15 @@ const (
 	TIMEOUT   time.Duration = 3
 )
 
+var (
+	host     string = os.Getenv("DB_HOST")
+	port     string = os.Getenv("DB_PORT")
+	username string = os.Getenv("DB_USERNAME")
+	password string = os.Getenv("DB_PASSWORD")
+)
+
 // 실행환경에 맞춰 DB URI를 생성하기 위한 함수
 func makeDatabaseURI() string {
-	host := os.Getenv("DB_HOST")
-	port := os.Getenv("DB_PORT")
-	username := os.Getenv("DB_USERNAME")
-	password := os.Getenv("DB_PASSWORD")
 	if host == "" {
 		host = "localhost"
 	}
