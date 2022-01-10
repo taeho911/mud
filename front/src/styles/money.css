@@ -1,12 +1,12 @@
 .tag {
   display: inline-block;
   color: white;
-  background-color: gray;
-  font-size: 1rem;
+  background-color: black;
+  font-size: calc(10px + 1vmin);
   font-weight: 500;
   border: none;
   padding: 1px 10px;
-  margin: 0 5px;
+  margin: 1px 2px;
   border-radius: 2em;
   line-height: 22px;
   text-align: center;
@@ -21,7 +21,7 @@
 }
 .tag::selection {
   color: white;
-  background-color: grey;
+  background-color: darkgray;
 }
 
 .selected-tag {
@@ -39,11 +39,18 @@
   flex-direction: row;
   text-align: left;
   margin: 2vh 0;
-  padding: 0 1vw;
+  padding: 1vh 2vw;
+  /* color: white; */
   font-size: calc(10px + 1vmin);
+  /* font-size: calc(10px + 1vmin); */
   font-weight: bold;
-  width: 800px;
-  min-width: 800px;
+  /* width: 800px;
+  min-width: 800px; */
+  border: 2px solid grey;
+  border-left: 5px solid #ff3e00;
+  border-radius: 8px;
+  /* background-color: grey; */
+  transition-duration: 0.5s;
 }
 .money-unit-subcon-0 {
   display: flex;
@@ -83,7 +90,7 @@
 
 .money-unit-subcon-1 {
   display: flex;
-  font-size: calc(15px + 1vmin);
+  
   flex-direction: row;
 }
 .money-unit-subcon-2 {
@@ -114,10 +121,16 @@
   background-color: #303030;
 } */
 
-.add-icon {
+/* .add-icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
+} */
+.add-icon {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  display: inline-block;
   background-color: #1a73e8;
   border-radius: 50%;
   color: white;
@@ -129,39 +142,12 @@
   background-repeat: no-repeat;
   background-size: 3vh;
 }
-
-.add-container {
-  border: solid 1px black;
-  background-color: white;
-  position: absolute;
-  margin-top: 6vh;
-  padding: 2vh;
-  border-radius: 6px;
-  width: 250px;
-}
-.add-container > div > button {
-  margin: 1vh 0.5vw;
-}
-.add-container > div > input {
-  width: 200px;
-}
-
-.add-icon-container {
-  display: flex;
-  justify-content: center;
-  /* align-items: center; */
-}
-
-/* .money-tab-link {
-  cursor: pointer;
-  font-size: calc(15px + 1vmin);
-  font-weight: bold;
-  margin: 0 2vw;
-} */
-.money-tab-icon {
-  position: fixed;
+.stat-icon {
+  /* position: fixed;
   right: 2vw;
-  bottom: 2vh;
+  bottom: 2vh; */
+  display: inline-block;
+  margin-left: 1vw;
   background-color: black;
   border-radius: 50%;
   color: white;
@@ -173,10 +159,37 @@
   background-repeat: no-repeat;
   background-size: 3vh;
 }
-.money-tab-icon-active {
+.stat-icon-active,
+.add-icon-active {
   background-color: #ff3e00;
 }
-
-.money-tab-container {
-  transition-duration: 1s;
+.add-container {
+  text-align: center;
+  border: solid 1px black;
+  background-color: #fffff0;
+  position: absolute;
+  margin-top: 1vh;
+  padding: 2vh;
+  border-radius: 8px;
+  width: calc(200px + 10vmin);
+  z-index: 100;
+  transition-duration: 0.5s
 }
+.add-container > div > button {
+  margin: 1vh 0.5vw;
+}
+.add-container > div > input {
+  width: calc(150px + 10vmin);
+}
+.mod-container {
+  position: absolute;
+  right: 2vw;
+  margin-top: 7vh;
+}
+
+/* .money-tab-link {
+  cursor: pointer;
+  font-size: calc(15px + 1vmin);
+  font-weight: bold;
+  margin: 0 2vw;
+} */

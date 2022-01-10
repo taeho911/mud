@@ -73,6 +73,15 @@ func MoneyFindByTagsAll(ctx context.Context, username string, tags []string) ([]
 	return money, nil
 }
 
+func MoneyUpdateOne(ctx context.Context, update *model.Money) (int, error) {
+	filter := bson.M{"_id": update.ID}
+	result, err := updateOne(MONEY_COLL, update, ctx, filter, nil)
+	if err != nil {
+		return 0, err
+	}
+	return int(result.ModifiedCount), nil
+}
+
 func MoneyDeleteByID(ctx context.Context, id primitive.ObjectID) (int, error) {
 	filter := bson.M{"_id": id}
 	result, err := deleteOne(MONEY_COLL, ctx, filter, nil)

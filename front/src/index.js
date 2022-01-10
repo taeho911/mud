@@ -9,14 +9,12 @@ import './styles/global.css'
 import './styles/index.css'
 
 ReactDOM.render(
-  <div className='background'>
-    <AlertProvider>
-      <UserProvider>
-        <Nav />
-        <Alert />
-      </UserProvider>
-    </AlertProvider>
-  </div>,
+  <AlertProvider>
+    <UserProvider>
+      <Nav />
+      <Alert />
+    </UserProvider>
+  </AlertProvider>,
   document.getElementById('root')
 )
 

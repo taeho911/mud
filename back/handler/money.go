@@ -43,6 +43,28 @@ func MoneyPostHandler(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, money, http.StatusOK)
 }
 
+func MoneyPutHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	if r.Method != http.MethodPut {
+		writeError(w, errors.INVALID_METHOD, "put method only", http.StatusBadRequest)
+		return
+	}
+	var money model.Money
+	if err := parseReqBody(r.Body, &money); err != nil {
+		writeError(w, errors.INVALID_REQUEST_BODY, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if money.Username != ctx.Value(usernameKey).(string) {
+		writeError(w, errors.INVALID_REQUEST_BODY, "invalid username", http.StatusBadRequest)
+		return
+	}
+	if _, err := agent.MoneyUpdateOne(ctx, &money); err != nil {
+		writeError(w, errors.FAILED_PUT, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 func MoneyDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	if r.Method != http.MethodDelete {

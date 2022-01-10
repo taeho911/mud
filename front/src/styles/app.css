@@ -1,5 +1,6 @@
 .mud {
-  font-size: calc(50px + 15vmax);
+  text-align: center;
+  font-size: calc(80px + 10vmin);
   padding: 0;
   margin: 0;
 }

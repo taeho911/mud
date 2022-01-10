@@ -2,9 +2,8 @@ import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 import { AlertContext } from '../context/AlertContext'
-import '../styles/user-icon.css'
 
-function UserIcon() {
+function UserMenu() {
   const [promptMsg, setPromptMsg] = useState(undefined)
   const [user, setUser] = useContext(UserContext)
   const [alertMsg, setAlertMsg] = useContext(AlertContext)
@@ -58,36 +57,29 @@ function UserIcon() {
 
   return (
     <>
-      <details>
-        <summary className='user-icon'>
-          <h3 className='user-alphabet'>{user.username.substring(0, 1)}</h3>
-        </summary>
-        <div className='dropdown-menu user-dropdown-menu'>
-          <div className='dropdown-item'>Name</div>
-          <div className='dropdown-divider'></div>
-          <div className='dropdown-item dropdown-action-item' onClick={signOut}>Sign out</div>
-          <div className='dropdown-item dropdown-action-item' onClick={e => setPromptMsg('Input your password')}>Delete Account</div>
-        </div>
-      </details>
-      {promptMsg &&
-        <>
-          <div className='overlay' />
-          <div className='prompt-box'>
-            <div className='prompt'>
-              <form>
-                <div className='prompt-msg'>{promptMsg}</div>
-                <div className='margintop2'>
-                  <input type='password' name='password' placeholder='Password' />
-                </div>
-                <button onClick={deleteAccount}>Submit</button>
-                <button onClick={closePrompt}>Cancel</button>
-              </form>
-            </div>
+      <div className='dropdown-item'>{user.username}</div>
+      <div className='dropdown-divider'></div>
+      <div className='dropdown-action-item' onClick={signOut}>Sign out</div>
+      <div className='dropdown-action-item' onClick={e => setPromptMsg('Input your password')}>Delete Account</div>
+      <div className='dropdown-divider'></div>
+      
+      {promptMsg && <>
+        <div className='overlay' />
+        <div className='prompt-box'>
+          <div className='prompt'>
+            <form>
+              <div className='prompt-msg'>{promptMsg}</div>
+              <div className='margintop2'>
+                <input type='password' name='password' placeholder='Password' />
+              </div>
+              <button onClick={deleteAccount}>Submit</button>
+              <button onClick={closePrompt}>Cancel</button>
+            </form>
           </div>
-        </>
-      }
+        </div>
+      </>}
     </>
   )
 }
 
-export default UserIcon
+export default UserMenu

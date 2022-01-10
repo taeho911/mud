@@ -74,7 +74,14 @@ function Money() {
     }).then(res => {
       if (res.status === 200) {
         e.target.form.reset()
-        fetchMoneyList()
+        res.json().then(data => {
+          moneyList.push(data)
+          setMoneyList([...moneyList.sort((a, b) => {
+            if (a.date < b.date) return 1
+            if (a.date > b.date) return -1
+            return 0
+          })])
+        })
       } else {
         res.text().then(err => setErr(err))
       }
@@ -105,31 +112,39 @@ function Money() {
   return (
     <main>
       <h1>Money</h1>
-      <div className='add-icon-container'>
-        <div className='add-icon' onClick={e => setAddSwitch(!addSwitch)}></div>
+
+      <div>
+        <div className='margintop2'>
+          <div className={`add-icon ${addSwitch ? 'add-icon-active' : ''}`}
+            onClick={e => setAddSwitch(!addSwitch)}></div>
+          <div className={`stat-icon ${statSwitch ? 'stat-icon-active' : ''}`}
+            onClick={e => setStatSwitch(!statSwitch)}></div>
+        </div>
+
         <form className={`add-container ${addSwitch ? '' : 'display-none'}`}>
           <div>
             <input type='date' name='date' placeholder='Date' /><br />
             <input type='number' step='100' name='amount' placeholder='Amount' /><br />
             <input type='text' name='summary' placeholder='Summary' /><br />
             <input ref={tagInput} type='text' placeholder='Add custom tag' /><br />
+          </div>
+          <div>
             <button onClick={addTags}>Add Tag</button>
             <button onClick={postMoney}>Submit</button>
           </div>
           <div>
             {tags.map((tag, i) => {
               return <span key={i} 
-              className={`tag ${selectedTags.includes(tag) ? 'selected-tag' : ''}`}
-              onClick={e => updateSelectedTags(tag)}
-              onDoubleClick={e => setTags(tags.filter(item => {return item !== tag}))}>{tag}</span>
+                className={`tag ${selectedTags.includes(tag) ? 'selected-tag' : ''}`}
+                onClick={e => updateSelectedTags(tag)}
+                onDoubleClick={e => setTags(tags.filter(item => {return item !== tag}))}>{tag}</span>
             })}
           </div>
         </form>
       </div>
-      <div className={`money-tab-icon ${statSwitch ? 'money-tab-icon-active' : ''}`}
-        onClick={e => setStatSwitch(!statSwitch)}></div>
+      
       <div className='err margintop2'>{err}</div>
-      <div className='money-tab-container'>
+      <div>
         {!statSwitch && moneyList.map((v, i) => {
           return <MoneyUnit key={i} money={v} funcs={{deleteMoney: deleteMoney}}/>
         })}

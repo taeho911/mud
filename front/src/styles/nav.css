@@ -1,0 +1,28 @@
+.menu {
+  height: 5vh;
+  font-size: calc(10px + 1vmin);
+  font-weight: bold;
+}
+
+.dropdown-summary {
+  text-align: right;
+  padding: 0.5vh 1vw;
+}
+
+.dropdown-menu {
+  right: 1vw;
+}
+.dropdown-menu > a {
+  display: block;
+  font-size: calc(10px + 1vmin);
+  text-decoration: none;
+  padding: 0.5vh 1vh;
+  cursor: pointer;
+}
+.dropdown-menu > a:visited {
+  color: black;
+}
+.dropdown-menu > a:hover {
+  color: white;
+  background-color: #9900ff;
+}

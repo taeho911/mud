@@ -2,11 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { UserContext } from './context/UserContext'
 import App from './App'
+import UserMenu from './components/UserMenu'
 import Sign from './components/Sign'
 import Account from './components/Account'
 import Money from './components/Money'
-import Test from './components/Test'
-import UserIcon from './components/UserIcon'
+import './styles/nav.css'
 
 function Nav() {
   const [user, setUser] = useContext(UserContext)
@@ -17,12 +17,16 @@ function Nav() {
       if (res.status === 200) res.json().then(data => setUser(data))
     })
   }, [])
-  
+
   return (
     <BrowserRouter>
-      <nav className='nav'>
-        <div className='nav-container'>
-          <Link to='/'>Mud</Link>
+      <details className='menu'>
+        <summary className='dropdown-summary'>Menu</summary>
+        <div className='dropdown-menu'>
+          {user &&
+            <UserMenu />
+          }
+          <Link to='/'>Home</Link>
           {!user && 
             <Link to='sign'>Sign</Link>
           }
@@ -30,27 +34,18 @@ function Nav() {
             <Link to='account'>Account</Link>
             <Link to='money'>Money</Link>
           </>}
-          <Link to='test'>Test</Link>
         </div>
-        {user &&
-          <div className='user-container'>
-            <UserIcon />
-          </div>
+      </details>
+      <Routes>
+        <Route path='/' element={<App />} />
+        {!user && 
+          <Route path='sign' element={<Sign />} />
         }
-      </nav>
-      <div className='wrapper'>
-        <Routes>
-          <Route path='/' element={<App />} />
-          {!user && 
-            <Route path='sign' element={<Sign />} />
-          }
-          {user && <>
-            <Route path='account' element={<Account />} />
-            <Route path='money' element={<Money />} />
-          </>}
-          <Route path='test' element={<Test />} />
-        </Routes>
-      </div>
+        {user && <>
+          <Route path='account' element={<Account />} />
+          <Route path='money' element={<Money />} />
+        </>}
+      </Routes>
     </BrowserRouter>
   )
 }
