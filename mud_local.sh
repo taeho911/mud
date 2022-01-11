@@ -87,8 +87,6 @@ case $CMD in
     ;;
 
 *)
-    kill_back
-    kill_front
     build_back
     build_front
     start_back

@@ -62,7 +62,7 @@ func MoneyPutHandler(w http.ResponseWriter, r *http.Request) {
 		writeError(w, errors.FAILED_PUT, err.Error(), http.StatusBadRequest)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	writeJson(w, money, http.StatusOK)
 }
 
 func MoneyDeleteHandler(w http.ResponseWriter, r *http.Request) {

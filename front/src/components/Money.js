@@ -5,15 +5,20 @@ import MoneyUnit from './MoneyUnit'
 import '../styles/money.css'
 
 function Money() {
+  let today = new Date()
+  const monthList = ['All']
+
   const [user, setUser] = useContext(UserContext)
   const [tags, setTags] = useState(['income', 'spend', 'invest', 'life', 'play', 'drink', 'food'])
   const [selectedTags, setSelectedTags] = useState([])
   const [moneyList, setMoneyList] = useState([])
   const [addSwitch, setAddSwitch] = useState(false)
   const [statSwitch, setStatSwitch] = useState(false)
+  const [monthSwitch, setMonthSwitch] = useState()
   const [err, setErr] = useState('')
   const tagInput = useRef(undefined)
   const navigate = useNavigate()
+
 
   const fetchMoneyList = () => {
     fetch('/api/money/get').then(res => {
@@ -29,6 +34,12 @@ function Money() {
         res.text().then(err => setErr(err))
         break
       }
+    })
+  }
+
+  const fetchMoneyListByMonth = (year, month) => {
+    fetch(`/api/money/get?year=${year}&month=${month}`).then(res => {
+      console.log(res.status)
     })
   }
 
@@ -72,18 +83,21 @@ function Money() {
       headers: {'Content-Type': 'application/json;charset=UTF-8'},
       body: JSON.stringify(jsondata)
     }).then(res => {
-      if (res.status === 200) {
-        e.target.form.reset()
-        res.json().then(data => {
-          moneyList.push(data)
-          setMoneyList([...moneyList.sort((a, b) => {
-            if (a.date < b.date) return 1
-            if (a.date > b.date) return -1
-            return 0
-          })])
-        })
-      } else {
-        res.text().then(err => setErr(err))
+      switch(res.status) {
+        case 200:
+          e.target.form.reset()
+          res.json().then(data => {
+            moneyList.push(data)
+            setMoneyList([...moneyList.sort((a, b) => {
+              if (a.date < b.date) return 1
+              if (a.date > b.date) return -1
+              return 0
+            })])
+          })
+          break
+        default:
+          res.text().then(err => setErr(err))
+          break
       }
     })
   }
@@ -142,11 +156,23 @@ function Money() {
           </div>
         </form>
       </div>
-      
+
       <div className='err margintop2'>{err}</div>
+
+      <div>
+        {["All", 1,2,3,4,5,6,7,8,9,10,11,12].map(month => {
+          return <button className='btn-month' onClick={e => console.log(month)}>{month}</button>
+        })}
+      </div>
+
+      {/* https://www.npmjs.com/package/react-chartjs-2 */}
+
       <div>
         {!statSwitch && moneyList.map((v, i) => {
-          return <MoneyUnit key={i} money={v} funcs={{deleteMoney: deleteMoney}}/>
+          return <MoneyUnit key={i} money={v}
+            moneyList={moneyList}
+            deleteMoney={deleteMoney}
+            setMoneyList={setMoneyList} />
         })}
       </div>
     </main>

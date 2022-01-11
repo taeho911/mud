@@ -10,21 +10,23 @@ function MoneyUnit(props) {
         <div className='money-unit-subcon-1'>
           <div className='col-date'>{props.money.date.split('T')[0]}</div>
           <div className={`col-amount ${props.money.amount < 0 ? 'red':'blue'}`}>{props.money.amount.toLocaleString()}</div>
-          <div className='col-summary'>{props.money.summary}</div>
         </div>
-        <div className='money-unit-subcon-2 margintop1'>
+        <div className='col-summary'>{props.money.summary}</div>
+        <div className='money-unit-subcon-2'>
           {props.money.tags.map((v, i) => {
             return <div key={i} className='tag display-tag'>{v}</div>
           })}
         </div>
       </div>
       <div className='icon-container'>
-        <div className='del-icon' onClick={e => props.funcs.deleteMoney(props.money._id)}></div>
+        <div className='del-icon' onClick={e => props.deleteMoney(props.money._id)}></div>
         <div className='mod-icon' onClick={e => setFormSwitch(!formSwitch)}></div>
-        <button onClick={e => console.log(props.money)}>Print</button>
       </div>
       {formSwitch &&
-        <MoneyForm money={props.money} funcs={{setFormSwitch: setFormSwitch}} />
+        <MoneyForm money={props.money}
+          moneyList={props.moneyList}
+          setFormSwitch={setFormSwitch}
+          setMoneyList={props.setMoneyList} />
       }
     </div>
   )

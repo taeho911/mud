@@ -3,6 +3,7 @@ import { useState, useRef } from 'react'
 function MoneyForm(props) {
   const [tags, setTags] = useState(props.money.tags)
   const [selectedTags, setSelectedTags] = useState(props.money.tags)
+  const [err, setErr] = useState('')
   const tagInput = useRef(undefined)
 
   const addTags = e => {
@@ -27,14 +28,44 @@ function MoneyForm(props) {
     }
   }
 
+  const replaceMoneyListElem = (moneyList, data) => {
+    let i = moneyList.findIndex(money => money._id === data._id)
+    moneyList[i] = data
+    return moneyList
+  }
+
   const putMoney = e => {
     e.preventDefault()
+    let formdata = new FormData(e.target.form)
+    let jsondata = Object.fromEntries(formdata.entries())
 
+    jsondata.date = new Date(jsondata.date)
+    jsondata.amount = parseFloat(jsondata.amount)
+    jsondata.tags = selectedTags
+    jsondata._id = props.money._id
+    jsondata.username = props.money.username
+    jsondata.maketime = props.money.maketime
+
+    fetch('/api/money/put', {
+      method: 'put',
+      headers: {'Content-Type': 'application/json;charset=UTF-8'},
+      body: JSON.stringify(jsondata)
+    }).then(res => {
+      switch(res.status) {
+        case 200:
+          props.setFormSwitch(false)
+          res.json().then(data => props.setMoneyList([...replaceMoneyListElem(props.moneyList, data)]))
+          break
+        default:
+          res.text().then(err => setErr(err))
+          break
+      }
+    })
   }
 
   return (
     <>
-      <div className='overlay' onClick={e => props.funcs.setFormSwitch(false)}></div>
+      <div className='overlay' onClick={e => props.setFormSwitch(false)}></div>
       <form className='add-container mod-container'>
         <div>
           <input type='date' name='date' placeholder='Date' defaultValue={props.money.date.split('T')[0]} /><br />
@@ -45,7 +76,7 @@ function MoneyForm(props) {
         <div>
           <button onClick={addTags}>Add Tag</button>
           <button onClick={putMoney}>Submit</button>
-          <button onClick={e => props.funcs.setFormSwitch(false)}>X</button>
+          <button onClick={e => props.setFormSwitch(false)}>X</button>
         </div>
         <div>
           {tags.map((tag, i) => {
@@ -55,6 +86,9 @@ function MoneyForm(props) {
               onDoubleClick={e => setTags(tags.filter(item => {return item !== tag}))}>{tag}</span>
           })}
         </div>
+        {err.length > 0 &&
+          <div className='err margintop2'>{err}</div>
+        }
       </form>
     </>
   )

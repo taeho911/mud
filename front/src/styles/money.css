@@ -39,7 +39,7 @@
   flex-direction: row;
   text-align: left;
   margin: 2vh 0;
-  padding: 1vh 2vw;
+  padding: 1vh 2vh;
   /* color: white; */
   font-size: calc(10px + 1vmin);
   /* font-size: calc(10px + 1vmin); */
@@ -61,7 +61,8 @@
   display: flex;
   flex: 0;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  /* align-content: flex-start; */
 }
 .del-icon {
   background-color: #ff3e00;
@@ -76,6 +77,7 @@
   background-size: 1.5vh;
 }
 .mod-icon {
+  margin-top: 1vh;
   background-color: #ffd000;
   border-radius: 50%;
   color: white;
@@ -90,7 +92,6 @@
 
 .money-unit-subcon-1 {
   display: flex;
-  
   flex-direction: row;
 }
 .money-unit-subcon-2 {
@@ -105,12 +106,12 @@
 .col-amount {
   display: flex;
   padding: 0 1vw;
-  flex: 1;
+  flex: 2;
 }
 .col-summary {
   display: flex;
-  padding: 0 1vw;
-  flex: 2;
+  padding: 1vh 1vw;
+  /* flex: 2; */
 }
 
 /* .display-tag {
@@ -185,6 +186,15 @@
   position: absolute;
   right: 2vw;
   margin-top: 7vh;
+}
+
+.btn-month {
+  margin: 0.5vmin 0.3vh;
+  background-color: black;
+}
+.btn-month-active {
+  margin: 0.5vh 0.3vh;
+  background-color: #ff3e00;
 }
 
 /* .money-tab-link {
