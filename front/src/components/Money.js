@@ -5,14 +5,16 @@ import MoneyUnit from './MoneyUnit'
 import '../styles/money.css'
 
 function Money() {
-  let today = new Date()
+  const today = new Date()
+  const yearMonth = today.toISOString().split('T')[0].slice(0, 7)
+  const yearMonthRegex = new RegExp('^[0-9]{4}-(1?[0-2]|0?[1-9])$')
+
   const [user, setUser] = useContext(UserContext)
   const [tags, setTags] = useState(['income', 'spend', 'invest', 'life', 'play', 'drink', 'food'])
   const [selectedTags, setSelectedTags] = useState([])
   const [moneyList, setMoneyList] = useState([])
   const [addSwitch, setAddSwitch] = useState(false)
   const [statSwitch, setStatSwitch] = useState(false)
-  const [month, setMonth] = useState(today.toISOString().split('T')[0].slice(0, 7))
   const [err, setErr] = useState('')
   const tagInput = useRef(undefined)
   const navigate = useNavigate()
@@ -34,9 +36,9 @@ function Money() {
     })
   }
 
-  const fetchMoneyListByMonth = (year, month) => {
-    
-    fetch(`/api/money/get?year=${year}&month=${month}`).then(res => {
+  const fetchMoneyListByMonth = month => {
+    let splited = month.split('-')
+    fetch(`/api/money/get?year=${parseInt(splited[0])}&month=${parseInt(splited[1])}&count=1`).then(res => {
       switch (res.status) {
       case 200:
         res.json().then(data => setMoneyList(data))
@@ -52,7 +54,7 @@ function Money() {
     })
   }
 
-  useEffect(() => fetchMoneyList(), [])
+  useEffect(() => fetchMoneyListByMonth(yearMonth), [])
 
   const addTags = e => {
     e.preventDefault()
@@ -132,9 +134,12 @@ function Money() {
     })
   }
 
-  const changeMonth = e => {
+  const changeYearMonth = e => {
     e.preventDefault()
-    
+    setErr('')
+    if (yearMonthRegex.test(e.target.value)) {
+      fetchMoneyListByMonth(e.target.value)
+    }
   }
 
   return (
@@ -174,7 +179,7 @@ function Money() {
       <div className='err margintop2'>{err}</div>
 
       <div>
-        <input type='month' defaultValue={month} onChange={changeMonth}></input>
+        <input type='month' defaultValue={yearMonth} onChange={changeYearMonth}></input>
       </div>
 
       {/* https://www.npmjs.com/package/react-chartjs-2 */}

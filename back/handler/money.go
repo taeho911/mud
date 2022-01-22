@@ -27,14 +27,17 @@ func MoneyGetHandler(w http.ResponseWriter, r *http.Request) {
 		year, err := strconv.Atoi(yearStr)
 		if err != nil {
 			writeError(w, errors.INVALID_QUERY, "year is not number format", http.StatusBadRequest)
+			return
 		}
 		month, err := strconv.Atoi(monthStr)
 		if err != nil {
 			writeError(w, errors.INVALID_QUERY, "month is not number format", http.StatusBadRequest)
+			return
 		}
 		count, err := strconv.Atoi(countStr)
 		if err != nil {
 			writeError(w, errors.INVALID_QUERY, "count is not number format", http.StatusBadRequest)
+			return
 		}
 		moneyList, err = agent.MoneyFindByMonth(ctx, ctx.Value(usernameKey).(string), year, month, count)
 		if err != nil {

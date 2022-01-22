@@ -131,6 +131,7 @@ input:hover {
 
 .err {
   font-size: calc(10px + 1vmin);
+  font-weight: bold;
   color: #ff3e00;
 }
 
