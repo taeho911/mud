@@ -130,6 +130,7 @@ func TestMoneyFindByTagsAll(t *testing.T) {
 	}
 
 	var deleteList []primitive.ObjectID
+	MoneyDeleteByUsername(ctx, username)
 
 	for _, money := range moneyList {
 		MoneyInsertOne(ctx, &money)
@@ -142,6 +143,66 @@ func TestMoneyFindByTagsAll(t *testing.T) {
 	}
 	if len(result) != 1 {
 		t.Fatalf("len(result) = %v", len(result))
+	}
+
+	for _, id := range deleteList {
+		MoneyDeleteByID(ctx, id)
+	}
+}
+
+func TestMoneyFindByMonth(t *testing.T) {
+	ctx := context.TODO()
+	username := "TestMoneyFindByMonth"
+	moneyList := []model.Money{
+		{
+			Username: username,
+			Date:     time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+			Amount:   1000,
+		},
+		{
+			Username: username,
+			Date:     time.Date(2021, 1, 31, 23, 59, 59, 0, time.UTC),
+			Amount:   -1000,
+		},
+		{
+			Username: username,
+			Date:     time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
+			Amount:   1000,
+		},
+		{
+			Username: username,
+			Date:     time.Date(2021, 12, 31, 0, 0, 0, 0, time.UTC),
+			Amount:   1000,
+		},
+		{
+			Username: username,
+			Date:     time.Date(2022, 1, 1, 0, 0, 0, 0, time.UTC),
+			Amount:   1000,
+		},
+	}
+
+	var deleteList []primitive.ObjectID
+	MoneyDeleteByUsername(ctx, username)
+
+	for _, money := range moneyList {
+		MoneyInsertOne(ctx, &money)
+		deleteList = append(deleteList, money.ID)
+	}
+
+	result1, err := MoneyFindByMonth(ctx, username, 2021, 1, 1)
+	if err != nil {
+		t.Fatalf("err = %v", err)
+	}
+	if len(result1) != 2 {
+		t.Fatalf("len(result1) = %v", len(result1))
+	}
+
+	result2, err := MoneyFindByMonth(ctx, username, 2021, 12, 1)
+	if err != nil {
+		t.Fatalf("err = %v", err)
+	}
+	if len(result2) != 1 {
+		t.Fatalf("len(result2) = %v", len(result2))
 	}
 
 	for _, id := range deleteList {

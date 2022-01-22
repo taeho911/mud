@@ -7,7 +7,7 @@ import (
 
 func moneyRouter() *http.ServeMux {
 	moneyMux := http.NewServeMux()
-	moneyMux.HandleFunc("/get", handler.Auth(handler.MoneyGetAll))
+	moneyMux.HandleFunc("/get", handler.Auth(handler.MoneyGetHandler))
 	moneyMux.HandleFunc("/post", handler.Auth(handler.MoneyPostHandler))
 	moneyMux.HandleFunc("/put", handler.Auth(handler.MoneyPutHandler))
 	moneyMux.HandleFunc("/delete", handler.Auth(handler.MoneyDeleteHandler))

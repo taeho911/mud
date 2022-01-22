@@ -6,19 +6,16 @@ import '../styles/money.css'
 
 function Money() {
   let today = new Date()
-  const monthList = ['All']
-
   const [user, setUser] = useContext(UserContext)
   const [tags, setTags] = useState(['income', 'spend', 'invest', 'life', 'play', 'drink', 'food'])
   const [selectedTags, setSelectedTags] = useState([])
   const [moneyList, setMoneyList] = useState([])
   const [addSwitch, setAddSwitch] = useState(false)
   const [statSwitch, setStatSwitch] = useState(false)
-  const [monthSwitch, setMonthSwitch] = useState()
+  const [month, setMonth] = useState(today.toISOString().split('T')[0].slice(0, 7))
   const [err, setErr] = useState('')
   const tagInput = useRef(undefined)
   const navigate = useNavigate()
-
 
   const fetchMoneyList = () => {
     fetch('/api/money/get').then(res => {
@@ -38,12 +35,24 @@ function Money() {
   }
 
   const fetchMoneyListByMonth = (year, month) => {
+    
     fetch(`/api/money/get?year=${year}&month=${month}`).then(res => {
-      console.log(res.status)
+      switch (res.status) {
+      case 200:
+        res.json().then(data => setMoneyList(data))
+        break
+      case 401:
+        setUser(undefined)
+        navigate('/', {replace: true})
+        break
+      default:
+        res.text().then(err => setErr(err))
+        break
+      }
     })
   }
 
-  useEffect(fetchMoneyList, [])
+  useEffect(() => fetchMoneyList(), [])
 
   const addTags = e => {
     e.preventDefault()
@@ -123,6 +132,11 @@ function Money() {
     })
   }
 
+  const changeMonth = e => {
+    e.preventDefault()
+    
+  }
+
   return (
     <main>
       <h1>Money</h1>
@@ -160,9 +174,7 @@ function Money() {
       <div className='err margintop2'>{err}</div>
 
       <div>
-        {["All", 1,2,3,4,5,6,7,8,9,10,11,12].map(month => {
-          return <button className='btn-month' onClick={e => console.log(month)}>{month}</button>
-        })}
+        <input type='month' defaultValue={month} onChange={changeMonth}></input>
       </div>
 
       {/* https://www.npmjs.com/package/react-chartjs-2 */}
