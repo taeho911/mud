@@ -2,14 +2,18 @@ import { useState, useRef, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 import MoneyUnit from './MoneyUnit'
+import MoneyStat from './MoneyStat'
 import '../styles/money.css'
 
 function Money() {
+  const getYearMonthFromISOString = isoString => {
+    return isoString.slice(0, 7)
+  }
   const today = new Date()
-  const yearMonth = today.toISOString().split('T')[0].slice(0, 7)
   const yearMonthRegex = new RegExp('^[0-9]{4}-(1?[0-2]|0?[1-9])$')
 
   const [user, setUser] = useContext(UserContext)
+  const [yearMonth, setYearMonth] = useState(getYearMonthFromISOString(today.toISOString()))
   const [tags, setTags] = useState(['income', 'spend', 'invest', 'life', 'play', 'drink', 'food'])
   const [selectedTags, setSelectedTags] = useState([])
   const [moneyList, setMoneyList] = useState([])
@@ -54,7 +58,10 @@ function Money() {
     })
   }
 
-  useEffect(() => fetchMoneyListByMonth(yearMonth), [])
+  useEffect(() => fetchMoneyListByMonth(yearMonth), [yearMonth])
+  useEffect(() => {
+    
+  }, [moneyList])
 
   const addTags = e => {
     e.preventDefault()
@@ -98,13 +105,19 @@ function Money() {
         case 200:
           e.target.form.reset()
           res.json().then(data => {
-            moneyList.push(data)
-            setMoneyList([...moneyList.sort((a, b) => {
-              if (a.date < b.date) return 1
-              if (a.date > b.date) return -1
-              return 0
-            })])
+            if (getYearMonthFromISOString(data.date) === yearMonth) {
+              moneyList.push(data)
+              setMoneyList([...moneyList.sort((a, b) => {
+                if (a.date < b.date) return 1
+                if (a.date > b.date) return -1
+                return 0
+              })])
+            }
           })
+          break
+        case 401:
+          setUser(undefined)
+          navigate('/', {replace: true})
           break
         default:
           res.text().then(err => setErr(err))
@@ -138,7 +151,7 @@ function Money() {
     e.preventDefault()
     setErr('')
     if (yearMonthRegex.test(e.target.value)) {
-      fetchMoneyListByMonth(e.target.value)
+      setYearMonth(e.target.value)
     }
   }
 
@@ -191,6 +204,9 @@ function Money() {
             deleteMoney={deleteMoney}
             setMoneyList={setMoneyList} />
         })}
+        {statSwitch &&
+          <MoneyStat moneyList={moneyList} />
+        }
       </div>
     </main>
   )
