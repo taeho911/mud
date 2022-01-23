@@ -92,16 +92,13 @@ function MoneyStat(props) {
   }
 
   return (
-    <>
-      <div>
-        <hr className='margintop4 marginbottom4'></hr>
-        <Doughnut data={incomeSpendingData} options={doughnutOptions} />
-        <hr className='margintop4 marginbottom4'></hr>
-        <Bar data={eachTagData} options={horizontalBarOptions} />
-        <hr className='margintop4 marginbottom4'></hr>
-        <button onClick={e => console.log(moneyModule.getTotalAmountOfEachTag(props.moneyList))}>getTotalAmountOfEachTag</button>
-      </div>
-    </>
+    <div>
+      <hr className='margintop4 marginbottom4'></hr>
+      <Doughnut data={incomeSpendingData} options={doughnutOptions} />
+      <hr className='margintop4 marginbottom4'></hr>
+      <Bar data={eachTagData} options={horizontalBarOptions} />
+      <hr className='margintop4 marginbottom4'></hr>
+    </div>
   )
 }
 

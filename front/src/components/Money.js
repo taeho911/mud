@@ -195,8 +195,6 @@ function Money() {
         <input type='month' defaultValue={yearMonth} onChange={changeYearMonth}></input>
       </div>
 
-      {/* https://www.npmjs.com/package/react-chartjs-2 */}
-
       <div>
         {!statSwitch && moneyList.map((v, i) => {
           return <MoneyUnit key={i} money={v}
