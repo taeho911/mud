@@ -35,11 +35,10 @@ function SignIn() {
   return (
     <div>
       <h1>Sign In</h1>
-      <form>
+      <form className='margintop2'>
         <input type='text' name='username' placeholder='Username' /><br />
         <input type='password' name='password' placeholder='Password' /><br />
         <button onClick={signIn}>Submit</button>
-        <button type='reset'>Reset</button>
       </form>
       <div className='err'>{err}</div>
     </div>

@@ -1,6 +1,10 @@
 .sign-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
   padding: 20px 20px;
-  border: 1px solid;
 }
 
 .sign-tab-box {
@@ -14,7 +18,8 @@
 
 .sign-tab-active {
   margin: 0 4vw;
-  color: #272829;
+  color: #ff3e00;
+  font-weight: bold;
 }
 
 .sign-tab:hover {

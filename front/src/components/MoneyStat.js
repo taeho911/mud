@@ -94,9 +94,13 @@ function MoneyStat(props) {
   return (
     <div>
       <hr className='margintop4 marginbottom4'></hr>
-      <Doughnut data={incomeSpendingData} options={doughnutOptions} />
+      <div className='chart'>
+        <Doughnut data={incomeSpendingData} options={doughnutOptions} />
+      </div>
       <hr className='margintop4 marginbottom4'></hr>
-      <Bar data={eachTagData} options={horizontalBarOptions} />
+      <div className='chart'>
+        <Bar data={eachTagData} options={horizontalBarOptions} />
+      </div>
       <hr className='margintop4 marginbottom4'></hr>
     </div>
   )

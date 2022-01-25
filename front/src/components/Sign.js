@@ -7,7 +7,7 @@ function Sign() {
   const [isSignIn, setIsSignIn] = useState(true)
 
   return (
-    <main className='sign-container'>
+    <main className='sign-container main-center'>
       <div className='sign-tab-box'>
         <span
           className={isSignIn ? 'sign-tab-active' : 'sign-tab'}

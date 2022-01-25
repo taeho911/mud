@@ -41,12 +41,11 @@ function SignUp(props) {
   return (
     <div>
       <h1>Sign Up</h1>
-      <form>
+      <form className='margintop2'>
         <input type='text' name='username' placeholder='Username' /><br />
         <input type='password' name='password' placeholder='Password' /><br />
         <input type='password' name='password_confirm' placeholder='Password Confirm' /><br />
         <button onClick={signUp}>Submit</button>
-        <button type='reset'>Reset</button>
       </form>
       <div className='err'>{err}</div>
     </div>

@@ -245,6 +245,23 @@ input:hover {
   margin-bottom: 4vh;
 }
 
+.width100 {
+  width: 100%;
+}
+.width80 {
+  width: 80%;
+}
+.width50 {
+  width: 50%;
+}
+
+.main-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
 input[type='number'] {
   width: 150px;
 }
