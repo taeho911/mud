@@ -1,6 +1,8 @@
 pipeline {
   agent any
-
+  environment {
+    WORKDIR = '~'
+  }
   stages {
     stage('Pre Check') {
       steps {
