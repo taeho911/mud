@@ -5,7 +5,7 @@
 # export GATEWAY=${GATEWAY:-"172.18.1.1"}
 
 # log envs
-export LOG_PATH=${LOG_PATH:-"~/mud/logs"}
+export LOG_PATH=${LOG_PATH:-"./logs"}
 
 # resources
 # export BACK_CPU_LIMIT=

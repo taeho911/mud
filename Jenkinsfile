@@ -1,6 +1,6 @@
 pipeline {
   agent any
-  
+
   stages {
     stage('Pre Check') {
       steps {
@@ -44,6 +44,15 @@ pipeline {
         docker-compose up -d
         '''
       }
+    }
+  }
+
+  post {
+    aborted {
+      sh 'docker-compose down'
+    }
+    failure {
+      sh 'docker-compose down'
     }
   }
 }
