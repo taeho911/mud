@@ -192,7 +192,7 @@ function Money() {
       <div className='err margintop2'>{err}</div>
 
       <div>
-        <input type='month' defaultValue={yearMonth} onChange={changeYearMonth}></input>
+        <input className='money-month' type='month' defaultValue={yearMonth} onChange={changeYearMonth}></input>
       </div>
 
       <div>
