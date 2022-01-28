@@ -1,6 +1,11 @@
 # MUD
 Project is a playground to develop anything Taeho Kim wants.
 
+Interface is mainly designed for smartphone device.
+
+# Demo
+http://13.115.15.116:3000/
+
 ## Tech Stack
 ### Database
   * MongoDB
