@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 import MoneyUnit from './MoneyUnit'
 import MoneyStat from './MoneyStat'
+import MoneyAnal from './MoneyAnal'
 import '../styles/money.css'
 
 function Money() {
@@ -18,7 +19,7 @@ function Money() {
   const [selectedTags, setSelectedTags] = useState([])
   const [moneyList, setMoneyList] = useState([])
   const [addSwitch, setAddSwitch] = useState(false)
-  const [statSwitch, setStatSwitch] = useState(false)
+  const [screenSwitch, setScreenSwitch] = useState(0)
   const [err, setErr] = useState('')
   const tagInput = useRef(undefined)
   const navigate = useNavigate()
@@ -161,10 +162,14 @@ function Money() {
 
       <div>
         <div className='margintop2'>
-          <div className={`add-icon ${addSwitch ? 'add-icon-active' : ''}`}
+          <div className={`common-icon add-icon ${addSwitch ? 'icon-active' : ''}`}
             onClick={e => setAddSwitch(!addSwitch)}></div>
-          <div className={`stat-icon ${statSwitch ? 'stat-icon-active' : ''}`}
-            onClick={e => setStatSwitch(!statSwitch)}></div>
+          <div className={`common-icon list-icon ${screenSwitch === 0 ? 'icon-active' : ''}`}
+            onClick={e => setScreenSwitch(0)}></div>
+          <div className={`common-icon stat-icon ${screenSwitch === 1 ? 'icon-active' : ''}`}
+            onClick={e => setScreenSwitch(1)}></div>
+          <div className={`common-icon anal-icon ${screenSwitch === 2 ? 'icon-active' : ''}`}
+            onClick={e => setScreenSwitch(2)}></div>
         </div>
 
         <form className={`add-container ${addSwitch ? '' : 'display-none'}`}>
@@ -196,14 +201,17 @@ function Money() {
       </div>
 
       <div>
-        {!statSwitch && moneyList.map((v, i) => {
+        {screenSwitch == 0 && moneyList.map((v, i) => {
           return <MoneyUnit key={i} money={v}
             moneyList={moneyList}
             deleteMoney={deleteMoney}
             setMoneyList={setMoneyList} />
         })}
-        {statSwitch &&
+        {screenSwitch == 1 &&
           <MoneyStat moneyList={moneyList} />
+        }
+        {screenSwitch == 2 &&
+          <MoneyAnal />
         }
       </div>
     </main>

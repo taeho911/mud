@@ -114,54 +114,44 @@
   /* flex: 2; */
 }
 
-/* .display-tag {
-  background-color: #303030;
-}
-.display-tag::selection {
-  color: white;
-  background-color: #303030;
-} */
-
-/* .add-icon-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-.add-icon {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
+.common-icon {
   display: inline-block;
-  background-color: #1a73e8;
-  border-radius: 50%;
-  color: white;
-  width: 5vh;
-  height: 5vh;
-  cursor: pointer;
-  background-image: url('../media/plus_white.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 3vh;
-}
-.stat-icon {
-  /* position: fixed;
-  right: 2vw;
-  bottom: 2vh; */
-  display: inline-block;
-  margin-left: 1vw;
   background-color: black;
   border-radius: 50%;
   color: white;
   width: 5vh;
   height: 5vh;
   cursor: pointer;
+}
+.add-icon {
+  background-color: #1a73e8;
+  background-image: url('../media/plus_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 3vh;
+}
+.list-icon {
+  margin-left: 1vw;
+  background-image: url('../media/list_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 3vh;
+}
+.stat-icon {
+  margin-left: 1vw;
   background-image: url('../media/graph_white.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 3vh;
 }
-.stat-icon-active,
-.add-icon-active {
+.anal-icon {
+  margin-left: 1vw;
+  background-image: url('../media/star_yellow.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 3vh;
+}
+.icon-active {
   background-color: #ff3e00;
 }
 .add-container {
