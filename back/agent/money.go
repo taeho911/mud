@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	MONEY_COLL string = "money"
+	MONEY_COLL            string = "money"
+	MONEY_AUTO_INPUT_COLL string = "money_auto_input"
 )
 
 func moneyCreateIndexes() ([]string, error) {
@@ -102,8 +103,8 @@ func MoneyUpdateOne(ctx context.Context, update *model.Money) (int, error) {
 	return int(result.ModifiedCount), nil
 }
 
-func MoneyDeleteByID(ctx context.Context, id primitive.ObjectID) (int, error) {
-	filter := bson.M{"_id": id}
+func MoneyDeleteByID(ctx context.Context, id primitive.ObjectID, username string) (int, error) {
+	filter := bson.M{"_id": id, "username": username}
 	result, err := deleteOne(MONEY_COLL, ctx, filter, nil)
 	if err != nil {
 		return 0, err
@@ -114,6 +115,50 @@ func MoneyDeleteByID(ctx context.Context, id primitive.ObjectID) (int, error) {
 func MoneyDeleteByUsername(ctx context.Context, username string) (int, error) {
 	filter := bson.M{"username": username}
 	result, err := deleteMany(MONEY_COLL, ctx, filter, nil)
+	if err != nil {
+		return 0, err
+	}
+	return int(result.DeletedCount), nil
+}
+
+func MoneyAutoInputInsertOne(ctx context.Context, moneyAutoInput *model.MoneyAutoInput) error {
+	result, err := insertOne(MONEY_AUTO_INPUT_COLL, moneyAutoInput, ctx, nil)
+	if err != nil {
+		return err
+	}
+	moneyAutoInput.ID = result.InsertedID.(primitive.ObjectID)
+	return nil
+}
+
+func MoneyAutoInputFindByUsername(ctx context.Context, username string) ([]model.MoneyAutoInput, error) {
+	filter := bson.M{"username": username}
+	option := options.Find().SetSort(bson.M{"inputdate": 1})
+	var moneyAutoInput []model.MoneyAutoInput
+	if err := find(MONEY_AUTO_INPUT_COLL, &moneyAutoInput, ctx, filter, option); err != nil {
+		return moneyAutoInput, err
+	}
+	if len(moneyAutoInput) == 0 {
+		moneyAutoInput = make([]model.MoneyAutoInput, 0)
+	}
+	return moneyAutoInput, nil
+}
+
+func MoneyAutoInputUpdateOne(ctx context.Context, update *model.MoneyAutoInput) (int, error) {
+	filter := bson.M{"_id": update.ID}
+	result, err := updateOne(MONEY_AUTO_INPUT_COLL, update, ctx, filter, nil)
+	if err != nil {
+		return 0, err
+	}
+	return int(result.ModifiedCount), nil
+}
+
+func MoneyAutoInputDeleteByID(ctx context.Context, hexID, username string) (int, error) {
+	id, err := primitive.ObjectIDFromHex(hexID)
+	if err != nil {
+		return 0, err
+	}
+	filter := bson.M{"_id": id, "username": username}
+	result, err := deleteOne(MONEY_AUTO_INPUT_COLL, ctx, filter, nil)
 	if err != nil {
 		return 0, err
 	}

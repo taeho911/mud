@@ -106,7 +106,75 @@ func MoneyDeleteHandler(w http.ResponseWriter, r *http.Request) {
 		writeError(w, errors.INVALID_REQUEST_BODY, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if _, err := agent.MoneyDeleteByID(ctx, money.ID); err != nil {
+	if _, err := agent.MoneyDeleteByID(ctx, money.ID, ctx.Value(usernameKey).(string)); err != nil {
+		writeError(w, errors.DELETE_MONEY_FAILED, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func MoneyAutoInputGetHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	if r.Method != http.MethodGet {
+		writeError(w, errors.INVALID_METHOD, "get method only", http.StatusBadRequest)
+		return
+	}
+	moneyAutoInputList, err := agent.MoneyAutoInputFindByUsername(ctx, ctx.Value(usernameKey).(string))
+	if err != nil {
+		writeError(w, errors.FAILED_GET, err.Error(), http.StatusBadRequest)
+		return
+	}
+	writeJson(w, moneyAutoInputList, http.StatusOK)
+}
+
+func MoneyAutoInputPostHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	if r.Method != http.MethodPost {
+		writeError(w, errors.INVALID_METHOD, "post method only", http.StatusBadRequest)
+		return
+	}
+	var moneyAutoInput model.MoneyAutoInput
+	if err := parseReqBody(r.Body, &moneyAutoInput); err != nil {
+		writeError(w, errors.INVALID_REQUEST_BODY, err.Error(), http.StatusBadRequest)
+		return
+	}
+	moneyAutoInput.Username = ctx.Value(usernameKey).(string)
+	if err := agent.MoneyAutoInputInsertOne(ctx, &moneyAutoInput); err != nil {
+		writeError(w, errors.FAILED_POST, err.Error(), http.StatusBadRequest)
+		return
+	}
+	writeJson(w, moneyAutoInput, http.StatusOK)
+}
+
+func MoneyAutoInputPutHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	if r.Method != http.MethodPut {
+		writeError(w, errors.INVALID_METHOD, "put method only", http.StatusBadRequest)
+		return
+	}
+	var moneyAutoInput model.MoneyAutoInput
+	if err := parseReqBody(r.Body, &moneyAutoInput); err != nil {
+		writeError(w, errors.INVALID_REQUEST_BODY, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if moneyAutoInput.Username != ctx.Value(usernameKey).(string) {
+		writeError(w, errors.INVALID_REQUEST_BODY, "invalid username", http.StatusBadRequest)
+		return
+	}
+	if _, err := agent.MoneyAutoInputUpdateOne(ctx, &moneyAutoInput); err != nil {
+		writeError(w, errors.FAILED_PUT, err.Error(), http.StatusBadRequest)
+		return
+	}
+	writeJson(w, moneyAutoInput, http.StatusOK)
+}
+
+func MoneyAutoInputDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	if r.Method != http.MethodDelete {
+		writeError(w, errors.INVALID_METHOD, "delete method only", http.StatusBadRequest)
+		return
+	}
+	if _, err := agent.MoneyAutoInputDeleteByID(ctx, r.URL.Query().Get("_id"), ctx.Value(usernameKey).(string)); err != nil {
 		writeError(w, errors.DELETE_MONEY_FAILED, err.Error(), http.StatusBadRequest)
 		return
 	}

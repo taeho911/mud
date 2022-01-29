@@ -145,7 +145,7 @@ input:hover {
   padding: 4px 0;
   font-weight: 500;
   background-color: white;
-  color: #282c34;
+  color: black;
   position: absolute;
   z-index: 80;
   border: solid 1px black;
@@ -153,10 +153,12 @@ input:hover {
   /* transform: translateY(-10px); */
 }
 .dropdown-item {
+  color: black;
   font-size: calc(10px + 1vmin);
   padding: 0.5vh 1vh;
 }
 .dropdown-action-item {
+  color: black;
   font-size: calc(10px + 1vmin);
   padding: 0.5vh 1vh;
   cursor: pointer;

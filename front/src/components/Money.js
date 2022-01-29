@@ -60,9 +60,6 @@ function Money() {
   }
 
   useEffect(() => fetchMoneyListByMonth(yearMonth), [yearMonth])
-  useEffect(() => {
-    
-  }, [moneyList])
 
   const addTags = e => {
     e.preventDefault()
