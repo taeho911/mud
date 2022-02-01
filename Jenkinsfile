@@ -49,10 +49,21 @@ pipeline {
 
   post {
     aborted {
-      sh 'docker-compose down'
+      sh '''
+      set +x; source ./env/env.docker.sh; set -x
+      docker-compose down || true
+      '''
     }
     failure {
-      sh 'docker-compose down'
+      sh '''
+      set +x; source ./env/env.docker.sh; set -x
+      docker-compose down || true
+      '''
+    }
+    always {
+      sh '''
+      docker image rm -f `docker images | grep '<none>' | awk '{print $3}'`
+      '''
     }
   }
 }

@@ -83,7 +83,7 @@ func TestMoneyFindByTagsIn(t *testing.T) {
 	}
 
 	for _, id := range deleteList {
-		MoneyDeleteByID(ctx, id)
+		MoneyDeleteByID(ctx, id, username)
 	}
 }
 
@@ -146,7 +146,7 @@ func TestMoneyFindByTagsAll(t *testing.T) {
 	}
 
 	for _, id := range deleteList {
-		MoneyDeleteByID(ctx, id)
+		MoneyDeleteByID(ctx, id, username)
 	}
 }
 
@@ -206,6 +206,6 @@ func TestMoneyFindByMonth(t *testing.T) {
 	}
 
 	for _, id := range deleteList {
-		MoneyDeleteByID(ctx, id)
+		MoneyDeleteByID(ctx, id, username)
 	}
 }
