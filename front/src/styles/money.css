@@ -151,6 +151,13 @@
   background-repeat: no-repeat;
   background-size: 3vh;
 }
+.setting-icon {
+  margin-left: 1vw;
+  background-image: url('../media/setting_white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 3vh;
+}
 .icon-active {
   background-color: #ff3e00;
 }

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 
-function MoneyForm(props) {
+function MoneyPutForm(props) {
   const [tags, setTags] = useState(props.money.tags)
   const [selectedTags, setSelectedTags] = useState(props.money.tags)
   const [err, setErr] = useState('')
@@ -94,4 +94,4 @@ function MoneyForm(props) {
   )
 }
 
-export default MoneyForm
+export default MoneyPutForm

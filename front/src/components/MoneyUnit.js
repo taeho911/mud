@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import MoneyForm from './MoneyForm'
+import MoneyPutForm from './MoneyPutForm'
 
 function MoneyUnit(props) {
   const [formSwitch, setFormSwitch] = useState(false)
@@ -23,7 +23,7 @@ function MoneyUnit(props) {
         <div className='mod-icon' onClick={e => setFormSwitch(!formSwitch)}></div>
       </div>
       {formSwitch &&
-        <MoneyForm money={props.money}
+        <MoneyPutForm money={props.money}
           moneyList={props.moneyList}
           setFormSwitch={setFormSwitch}
           setMoneyList={props.setMoneyList} />

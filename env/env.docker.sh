@@ -20,7 +20,7 @@ export LOG_PATH=${LOG_PATH:-"./logs"}
 # database envc
 export DB_CONTAINER_NAME=${DB_CONTAINER_NAME:-"mud_db"}
 export DB_IMAGE=${DB_IMAGE:-"mongo"}
-export DB_TAG=${DB_TAG:-"4.4.11-focal"}
+export DB_TAG=${DB_TAG:-"focal"}
 export DB_DATA_PATH=${DB_DATA_PATH:-"/data/db"}
 
 # backend envs
