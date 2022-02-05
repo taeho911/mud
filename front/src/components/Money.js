@@ -48,7 +48,7 @@ function Money() {
     }).then(res => {
       switch (res.status) {
         case 200:
-          setMoneyList(moneyList.filter((v, i) => v._id != _id))
+          setMoneyList(moneyList.filter((v, i) => v._id !== _id))
           break
         case 401:
           setUser(undefined)
@@ -103,19 +103,19 @@ function Money() {
       </div>
 
       <div>
-        {screenSwitch == 0 && moneyList.map((v, i) => {
+        {screenSwitch === 0 && moneyList.map((v, i) => {
           return <MoneyUnit key={i} money={v}
             moneyList={moneyList}
             deleteMoney={deleteMoney}
             setMoneyList={setMoneyList} />
         })}
-        {screenSwitch == 1 &&
+        {screenSwitch === 1 &&
           <MoneyStat moneyList={moneyList} />
         }
-        {screenSwitch == 2 &&
+        {screenSwitch === 2 &&
           <MoneyAnal />
         }
-        {screenSwitch == 3 &&
+        {screenSwitch === 3 &&
           <MoneySetting />
         }
       </div>

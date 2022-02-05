@@ -1,5 +1,5 @@
 # MUD
-Project is a playground to develop anything Taeho Kim wants.
+This project is a playground to develop anything Taeho Kim wants.
 
 Interface is mainly designed for smartphone device.
 
@@ -19,7 +19,7 @@ http://13.115.15.116:3000/
 ### Extra
   * Docker
   * Docker-compose
-  * jenkins
+  * Jenkins
   * AWS EC2
   * Amazon Linux 2
 
@@ -49,14 +49,12 @@ root:
   - mud_local.sh:       Shell script to build / deploy on local
 ```
 
-## Architecture
-
 ## Functionality
   * Sign up
   * Sign in
   * Session management
   * Deleting user account
-  * Money management
+  * Money management (Budget)
 
 ## How to Build
 There are several environment variables for running application. You can set those by executing **_source env/env.*.sh_** before build.
