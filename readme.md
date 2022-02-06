@@ -3,8 +3,14 @@ This project is a playground to develop anything Taeho Kim wants.
 
 Interface is mainly designed for smartphone device.
 
+Currently (2022-02-06) I am focusing on building money module which is personal budget management system.
+
+Basically all of MUD's services require authentication.
+
+You can easily create account from sign in service.
+
 # Demo
-http://13.115.15.116:3000/
+http://176.32.68.225:3000/
 
 ## Tech Stack
 ### Database
