@@ -12,6 +12,10 @@ You can easily create account from sign in service.
 # Demo
 http://176.32.68.225:3000/
 
+username: demo_0
+
+password: 1234qwer
+
 ## Tech Stack
 ### Database
   * MongoDB
